@@ -28,6 +28,25 @@
 
 ---
 
+## 📸 In-Game Visual Showcase
+
+### 1. The Storm Awakening (Initial State)
+*The floating diorama emerges from deep indigo squalls, shrouded in rain mist with the flicking lighthouse beacon awaiting restoration.*
+
+![Initial Storm Diorama](public/audit-artifacts/01_initial_storm_1080p.png)
+
+### 2. Tactile Seated Interaction & Spatial Shrines
+*Close three-quarter view showing the bespoke Blender 4.3 low-poly lighthouse, cliff terraces, and the three glowing memory fragments within reach.*
+
+![Stylized Lighthouse and Sockets](public/audit-artifacts/02_close_three_quarter_1080p.png)
+
+### 3. The Sunrise Finale (Full-Scale World Expansion)
+*With all three memories restored (Warmth, Life, Hope), the storm dissolves into a radiant dawn as the world smoothly expands around the player.*
+
+![Restored Sunrise Finale](public/audit-artifacts/03_restored_sunrise_finale_1080p.png)
+
+---
+
 ## 📖 Experience Overview
 
 **ECHOCRAFT VR — The Last Light** is a hands-first, seated-scale immersive VR storytelling experience created for the **Meta VR Start Developer Competition 2026 (Entertainment Track)** using Meta's official **Immersive Web SDK (IWSDK v1.1.0)**, Three.js, and WebXR.
