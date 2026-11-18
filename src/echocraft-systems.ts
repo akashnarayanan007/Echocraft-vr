@@ -391,7 +391,7 @@ export class EchoCraftStorySystem extends createSystem({
       this.beamRotationSpeed = 2.0;
       if (this.promptText) {
         this.promptText.setProperties({
-          text: 'The lighthouse lantern rekindles. Warmth pierces the stormy dark. Now restore the island’s living bloom.',
+          text: "The lighthouse lantern rekindles. Warmth pierces the stormy dark. Now restore the island's living bloom.",
         });
       }
     } else if (placedCount === 2) {

@@ -8,7 +8,6 @@ import {
   BoxGeometry,
   BufferAttribute,
   BufferGeometry,
-  Color,
   ConeGeometry,
   CylinderGeometry,
   DodecahedronGeometry,
@@ -23,7 +22,6 @@ import {
   RingGeometry,
   SphereGeometry,
   TorusGeometry,
-  Vector3,
 } from '@iwsdk/core';
 
 // ==========================================
