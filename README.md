@@ -1,17 +1,30 @@
 # ECHOCRAFT VR — The Last Light
 > *Build a Memory. Step Inside Its Story.*
 
+[![Play Live WebXR](https://img.shields.io/badge/PLAY%20LIVE-WebXR%20Ready-brightgreen?style=for-the-badge&logo=vercel)](https://echocraft-vr.vercel.app/)
 [![Meta VR Start 2026](https://img.shields.io/badge/Meta%20VR%20Start-2026%20Entry-blue?style=for-the-badge&logo=meta)](#-experience-overview)
 [![Meta IWSDK](https://img.shields.io/badge/Meta%20IWSDK-v1.1.0-orange?style=for-the-badge)](https://iwsdk.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Live Demo Status](https://img.shields.io/badge/Live%20Demo-Deployment%20Pending-yellow?style=for-the-badge)](#-live-demo)
 
 ---
 
-## 🎮 LIVE DEMO
+## 🎮 PLAY ECHOCRAFT VR
 
-> **Live demo: deployment pending**  
-> *The experience is configured and ready for WebXR on Meta Quest Browser or desktop browser playback once deployed.*
+### 🔗 **[PLAY ECHOCRAFT VR (Live WebXR Experience)](https://echocraft-vr.vercel.app/)**
+
+#### How to Play:
+- **In Meta Quest Browser (VR Mode)**:
+  1. Put on your Meta Quest headset (Quest 2, Quest 3, Quest 3S, or Quest Pro).
+  2. Open the Meta Quest Browser and navigate to **[https://echocraft-vr.vercel.app/](https://echocraft-vr.vercel.app/)**.
+  3. Click **"Step Inside the Story"** on the introductory screen.
+  4. Click **"Enter VR"** to activate full immersive WebXR mode.
+  5. Squeeze your controller grip or pinch your fingers to grab memory fragments, or point and click with the target ray.
+- **In Desktop Browser (Fallback Mode)**:
+  1. Open **[https://echocraft-vr.vercel.app/](https://echocraft-vr.vercel.app/)** in Google Chrome, Microsoft Edge, Brave, or Apple Safari.
+  2. Click **"Step Inside the Story"** to begin audio and render the storm diorama.
+  3. **Mouse**: Click and drag fragments, or direct-click any fragment to conduit-snap it to its shrine.
+  4. **Spatial HUD**: Click the one-touch placement buttons on the floating panel.
+  5. **Keyboard Shortcuts**: Press **`1`** for Warmth, **`2`** for Life, **`3`** for Hope, and **`R`** to Reset.
 
 ---
 
@@ -148,4 +161,4 @@ In strict adherence to competition guidelines and developer transparency:
 
 - Source code licensed under the [MIT License](LICENSE).
 - All custom 3D models and procedural shaders created specifically for ECHOCRAFT VR.
-- For third-party library licenses, see [ASSET_CREDITS.md](file:///c:/Users/akash/Desktop/ECHOCRAFT-VR/ASSET_CREDITS.md).
+- For third-party library licenses, see [ASSET_CREDITS.md](ASSET_CREDITS.md).
