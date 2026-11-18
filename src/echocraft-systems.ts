@@ -244,14 +244,25 @@ export class EchoCraftStorySystem extends createSystem({
       fragEntity.removeComponent(OneHandGrabbable);
     }
 
-    // Move object to socket position
+    // Move object to socket position and attach so it scales with the world
     if (fragEntity.object3D && socketEntity.object3D) {
       socketEntity.object3D.updateWorldMatrix(true, false);
       const targetPos = new Vector3();
       socketEntity.object3D.getWorldPosition(targetPos);
       targetPos.y += 0.05; // rest comfortably in socket bowl
       fragEntity.object3D.position.copy(targetPos);
+      socketEntity.object3D.attach(fragEntity.object3D);
       fragEntity.object3D.scale.set(0.65, 0.65, 0.65);
+
+      // Boost socket rune glow and guide beam upon activation
+      const rune = socketEntity.object3D.getObjectByName('SocketRuneRing') as Mesh;
+      if (rune && rune.material) {
+        (rune.material as MeshBasicMaterial).opacity = 1.0;
+      }
+      const beam = socketEntity.object3D.getObjectByName('SocketGuideBeam') as Mesh;
+      if (beam && beam.material) {
+        (beam.material as MeshBasicMaterial).opacity = 0.75;
+      }
     }
 
     // Play musical harmonic chime
@@ -361,10 +372,16 @@ export class EchoCraftStorySystem extends createSystem({
       this.targetBeamIntensity = 1.0;
       this.beamRotationSpeed = 3.5;
 
-      // Expand Diorama into full-scale environment around seated player
-      this.targetDioramaScale = 1.45;
-      this.targetDioramaY = -0.15;
-      this.targetDioramaZ = -0.55;
+      // Expand Diorama into massive full-scale world surrounding the seated player
+      this.targetDioramaScale = 6.0;
+      this.targetDioramaY = -2.6;
+      this.targetDioramaZ = -1.2;
+
+      // Shift ocean material to brilliant tropical sunrise turquoise
+      if (this.oceanMesh && (this.oceanMesh.material as MeshStandardMaterial).color) {
+        (this.oceanMesh.material as MeshStandardMaterial).color.setHex(0x14746f);
+        (this.oceanMesh.material as MeshStandardMaterial).roughness = 0.15;
+      }
 
       if (dioramaEntity) {
         dioramaEntity.setValue(DioramaWorld, 'isExpanded', true);
@@ -411,9 +428,25 @@ export class EchoCraftStorySystem extends createSystem({
     this.targetBeamIntensity = 0.18;
     this.beamRotationSpeed = 1.2;
 
-    // Reset Sockets
+    // Reset ocean to storm sea
+    if (this.oceanMesh && (this.oceanMesh.material as MeshStandardMaterial).color) {
+      (this.oceanMesh.material as MeshStandardMaterial).color.setHex(0x111c2e);
+      (this.oceanMesh.material as MeshStandardMaterial).roughness = 0.2;
+    }
+
+    // Reset Sockets & their rune lights
     this.queries.sockets.entities.forEach((s) => {
       s.setValue(MemorySocket, 'isOccupied', false);
+      if (s.object3D) {
+        const rune = s.object3D.getObjectByName('SocketRuneRing') as Mesh;
+        if (rune && rune.material) {
+          (rune.material as MeshBasicMaterial).opacity = 0.5;
+        }
+        const beam = s.object3D.getObjectByName('SocketGuideBeam') as Mesh;
+        if (beam && beam.material) {
+          (beam.material as MeshBasicMaterial).opacity = 0.18;
+        }
+      }
     });
 
     // Reset Fragments
@@ -424,6 +457,7 @@ export class EchoCraftStorySystem extends createSystem({
       const fragId = fragEntity.getValue(MemoryFragment, 'fragmentId') || 'warmth';
       const initPos = this.initialPositions.get(fragId);
       if (initPos && fragEntity.object3D) {
+        this.world.scene.attach(fragEntity.object3D);
         fragEntity.object3D.position.copy(initPos);
         fragEntity.object3D.scale.set(1.0, 1.0, 1.0);
       }
@@ -510,7 +544,11 @@ export class EchoCraftStorySystem extends createSystem({
       }
     }
 
-    // 4. Rotating Lighthouse Beam
+    // 4. Rotating Lighthouse Beam & Ocean handle
+    if (!this.oceanMesh && dioramaEntity?.object3D) {
+      const ocean = dioramaEntity.object3D.getObjectByName('OceanMesh');
+      if (ocean) this.oceanMesh = ocean as Mesh;
+    }
     if (!this.lighthouseBeamGroup && dioramaEntity?.object3D) {
       const beam = dioramaEntity.object3D.getObjectByName('LighthouseBeamGroup');
       if (beam) this.lighthouseBeamGroup = beam as unknown as Entity;

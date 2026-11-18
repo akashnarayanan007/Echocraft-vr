@@ -81,82 +81,84 @@
           "rotationSpeed": 1.2,
           "intensity": 0.25
         }
-      }
-    },
-    {
-      "id": "socket-warmth-node",
-      "name": "Socket Warmth",
-      "framingRole": "content",
-      "content": {
-        "type": "asset",
-        "asset": "socket-warmth",
-        "castShadow": true,
-        "receiveShadow": true
       },
-      "transform": {
-        "position": [-0.08, 1.26, -1.62],
-        "rotationDeg": [0, 0, 0],
-        "scale": 0.38
-      },
-      "components": {
-        "MemorySocket": {
-          "socketId": "socket-warmth",
-          "acceptedFragmentId": "warmth",
-          "isOccupied": false,
-          "snapRadius": 0.32
+      "children": [
+        {
+          "id": "socket-warmth-node",
+          "name": "Socket Warmth",
+          "framingRole": "content",
+          "content": {
+            "type": "asset",
+            "asset": "socket-warmth",
+            "castShadow": true,
+            "receiveShadow": true
+          },
+          "transform": {
+            "position": [-0.2, 0.88, 0.05],
+            "rotationDeg": [0, 0, 0],
+            "scale": 1.0
+          },
+          "components": {
+            "MemorySocket": {
+              "socketId": "socket-warmth",
+              "acceptedFragmentId": "warmth",
+              "isOccupied": false,
+              "snapRadius": 0.35
+            },
+            "RayInteractable": {}
+          }
         },
-        "RayInteractable": {}
-      }
-    },
-    {
-      "id": "socket-life-node",
-      "name": "Socket Life",
-      "framingRole": "content",
-      "content": {
-        "type": "asset",
-        "asset": "socket-life",
-        "castShadow": true,
-        "receiveShadow": true
-      },
-      "transform": {
-        "position": [0.18, 1.10, -1.48],
-        "rotationDeg": [0, 0, 0],
-        "scale": 0.38
-      },
-      "components": {
-        "MemorySocket": {
-          "socketId": "socket-life",
-          "acceptedFragmentId": "life",
-          "isOccupied": false,
-          "snapRadius": 0.32
+        {
+          "id": "socket-life-node",
+          "name": "Socket Life",
+          "framingRole": "content",
+          "content": {
+            "type": "asset",
+            "asset": "socket-life",
+            "castShadow": true,
+            "receiveShadow": true
+          },
+          "transform": {
+            "position": [0.45, 0.58, 0.2],
+            "rotationDeg": [0, 0, 0],
+            "scale": 1.0
+          },
+          "components": {
+            "MemorySocket": {
+              "socketId": "socket-life",
+              "acceptedFragmentId": "life",
+              "isOccupied": false,
+              "snapRadius": 0.35
+            },
+            "RayInteractable": {}
+          }
         },
-        "RayInteractable": {}
-      }
-    },
-    {
-      "id": "socket-hope-node",
-      "name": "Socket Hope",
-      "framingRole": "content",
-      "content": {
-        "type": "asset",
-        "asset": "socket-hope",
-        "castShadow": true,
-        "receiveShadow": true
-      },
-      "transform": {
-        "position": [0.03, 1.14, -1.78],
-        "rotationDeg": [0, 0, 0],
-        "scale": 0.38
-      },
-      "components": {
-        "MemorySocket": {
-          "socketId": "socket-hope",
-          "acceptedFragmentId": "hope",
-          "isOccupied": false,
-          "snapRadius": 0.32
-        },
-        "RayInteractable": {}
-      }
+        {
+          "id": "socket-hope-node",
+          "name": "Socket Hope",
+          "framingRole": "content",
+          "content": {
+            "type": "asset",
+            "asset": "socket-hope",
+            "castShadow": true,
+            "receiveShadow": true
+          },
+          "transform": {
+            "position": [0.1, 0.7, -0.6],
+            "rotationDeg": [0, 0, 0],
+            "scale": 1.0
+          },
+          "components": {
+            "MemorySocket": {
+              "socketId": "socket-hope",
+              "acceptedFragmentId": "hope",
+              "isOccupied": false,
+              "snapRadius": 0.35
+            },
+            "RayInteractable": {}
+          }
+        }
+      ]
     },
     {
       "id": "altar-plinth-node",
@@ -276,9 +278,9 @@
         "asset": "echocraft-hud"
       },
       "transform": {
-        "position": [-0.82, 1.15, -0.92],
-        "rotationDeg": [0, 32, 0],
-        "scale": 1.0
+        "position": [-0.62, 1.15, -0.9],
+        "rotationDeg": [0, 25, 0],
+        "scale": 0.36
       },
       "components": {
         "RayInteractable": {}

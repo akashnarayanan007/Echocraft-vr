@@ -1,16 +1,238 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no"
     />
-    <link rel="icon" href="data:," />
-    <title>echocraft-vr</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌊</text></svg>" />
+    <title>ECHOCRAFT VR — The Last Light</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: #0b0f19;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #ffffff;
+      }
+      #scene-container {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      /* Onboarding Modal Overlay */
+      #intro-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at center, rgba(15, 23, 42, 0.88) 0%, rgba(5, 8, 16, 0.96) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        backdrop-filter: blur(8px);
+        transition: opacity 0.4s ease, visibility 0.4s ease;
+      }
+      #intro-overlay.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      .modal-card {
+        background: rgba(18, 24, 38, 0.95);
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), 0 0 30px rgba(56, 189, 248, 0.15);
+        border-radius: 16px;
+        max-width: 580px;
+        width: 90%;
+        padding: 32px;
+        text-align: left;
+      }
+      .badge {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: #38bdf8;
+        background: rgba(56, 189, 248, 0.12);
+        padding: 4px 10px;
+        border-radius: 999px;
+        margin-bottom: 12px;
+        border: 1px solid rgba(56, 189, 248, 0.2);
+      }
+      .modal-title {
+        font-size: 28px;
+        font-weight: 800;
+        margin: 0 0 8px 0;
+        color: #ffffff;
+        letter-spacing: -0.5px;
+      }
+      .modal-sub {
+        font-size: 15px;
+        color: #94a3b8;
+        line-height: 1.5;
+        margin: 0 0 20px 0;
+      }
+      .instruction-section {
+        background: rgba(10, 15, 26, 0.75);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .section-heading {
+        font-size: 13px;
+        font-weight: 700;
+        color: #cbd5e1;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+      }
+      .controls-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .control-item {
+        font-size: 13px;
+        color: #cbd5e1;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .key-pill {
+        display: inline-block;
+        background: #1e293b;
+        border: 1px solid #475569;
+        border-radius: 4px;
+        padding: 2px 7px;
+        font-family: monospace;
+        font-size: 12px;
+        font-weight: 700;
+        color: #38bdf8;
+      }
+      .disclaimer {
+        font-size: 11px;
+        color: #64748b;
+        line-height: 1.4;
+        margin: 0 0 24px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding-top: 12px;
+      }
+      .btn-start {
+        width: 100%;
+        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+        border: 1px solid #38bdf8;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 700;
+        padding: 14px 24px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+      .btn-start:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4);
+      }
+      .btn-start:active {
+        transform: translateY(0);
+      }
+      /* Floating Help button */
+      #help-btn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        z-index: 1000;
+        background: rgba(15, 23, 42, 0.75);
+        color: #94a3b8;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        padding: 8px 14px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        backdrop-filter: blur(4px);
+        transition: all 0.2s;
+      }
+      #help-btn:hover {
+        color: #ffffff;
+        border-color: #38bdf8;
+        background: rgba(15, 23, 42, 0.95);
+      }
+    </style>
   </head>
-  <body style="margin: 0">
+  <body>
+    <!-- 3D WebXR Viewport Container -->
     <div id="scene-container"></div>
+
+    <!-- Mini Help button to re-summon instructions -->
+    <button id="help-btn" aria-label="Open Instructions">? Instructions</button>
+
+    <!-- Onboarding Modal Overlay -->
+    <div id="intro-overlay">
+      <div class="modal-card">
+        <span class="badge">Meta VR Start 2026 • Entertainment Track</span>
+        <h1 class="modal-title">The Last Light</h1>
+        <p class="modal-sub">
+          A seated hands-first storytelling diorama built with Meta Immersive Web SDK (IWSDK). Restore the storm-battered lighthouse island by returning three lost memory fragments to their shrines.
+        </p>
+
+        <div class="instruction-section">
+          <div class="section-heading">How to Interact</div>
+          <div class="controls-grid">
+            <div class="control-item">
+              <span class="key-pill">Mouse Click</span>
+              <span>Click fragment or HUD button</span>
+            </div>
+            <div class="control-item">
+              <span class="key-pill">1</span> <span class="key-pill">2</span> <span class="key-pill">3</span>
+              <span>Place Warmth, Life, Hope</span>
+            </div>
+            <div class="control-item">
+              <span class="key-pill">R</span>
+              <span>Restart experience</span>
+            </div>
+            <div class="control-item">
+              <span class="key-pill">VR Hand Pinch</span>
+              <span>Pinch &amp; carry in WebXR</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="disclaimer">
+          <strong>Testing Note:</strong> This experience was engineered and tested with desktop WebXR emulation (Meta Quest 3 profile) and standard desktop mouse/keyboard input. Immersion features require a WebXR-compatible browser or headset.
+        </p>
+
+        <button id="start-btn" class="btn-start">Step Inside the Story</button>
+      </div>
+    </div>
+
+    <script>
+      const overlay = document.getElementById('intro-overlay');
+      const startBtn = document.getElementById('start-btn');
+      const helpBtn = document.getElementById('help-btn');
+
+      startBtn.addEventListener('click', () => {
+        overlay.classList.add('hidden');
+      });
+
+      helpBtn.addEventListener('click', () => {
+        overlay.classList.remove('hidden');
+      });
+    </script>
     <script type="module" src="/src/index.ts"></script>
   </body>
 </html>
