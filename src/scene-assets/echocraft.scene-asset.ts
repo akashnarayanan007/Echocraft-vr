@@ -31,38 +31,42 @@ import {
 // ==========================================
 export const PALETTE = {
   // Storm phase
-  rockDark: 0x24283b,
-  rockMid: 0x3b4261,
-  soilDormant: 0x1f2335,
-  seaDark: 0x111c2e,
-  seaFoam: 0x415678,
-  rain: 0x7aa2f7,
+  rockDark: 0x2d3448,
+  rockMid: 0x48526e,
+  soilDormant: 0x222838,
+  cliffHighlight: 0x5d6888,
+  seaDark: 0x0f2238,
+  seaFoam: 0x688fa8,
+  rain: 0x93b7f5,
+  pathSand: 0x3d4454,
   
   // Lighthouse
-  lighthouseBase: 0x3f465d,
-  lighthouseTower: 0xe0e6ed,
-  lighthouseRed: 0xa83232,
-  lighthouseRoof: 0x222638,
-  lanternGlass: 0xffeedd,
-  lanternAmber: 0xffaa22,
-  lanternWarmGlow: 0xffdd66,
+  lighthouseBase: 0x424a5e,
+  lighthouseTower: 0xf1f5f9,
+  lighthouseRed: 0xbe2a2a,
+  lighthouseRoof: 0x1e2433,
+  lighthouseTrim: 0xd6dfe8,
+  lanternGlass: 0xfff3d6,
+  lanternAmber: 0xffa012,
+  lanternWarmGlow: 0xffdc73,
   
   // Fragments & Sockets
-  warmthGlow: 0xff9900,
-  warmthCore: 0xffcc44,
-  lifeGlow: 0x10b981,
+  warmthGlow: 0xff8c00,
+  warmthCore: 0xffc433,
+  lifeGlow: 0x059669,
   lifeCore: 0x34d399,
-  hopeGlow: 0x06b6d4,
+  hopeGlow: 0x0284c7,
   hopeCore: 0x38bdf8,
   
   // Healed World
-  mossGreen: 0x2d6a4f,
-  grassLush: 0x40916c,
-  flowerYellow: 0xffd166,
-  flowerPink: 0xff758f,
-  flowerCyan: 0x70d6ff,
-  seaTropical: 0x14746f,
-  woodWarm: 0x5e503f,
+  mossGreen: 0x1e4620,
+  grassLush: 0x2e7d32,
+  flowerYellow: 0xfbbf24,
+  flowerPink: 0xf43f5e,
+  flowerCyan: 0x38bdf8,
+  seaTropical: 0x0891b2,
+  seaTropicalFoam: 0xa5f3fc,
+  woodWarm: 0x78563a,
 };
 
 /**
@@ -110,7 +114,7 @@ export function createIslandDiorama(): Group {
   const terrainGroup = new Group();
   terrainGroup.name = 'TerrainGroup';
 
-  // Lower craggy cliff rocks
+  // Lower craggy cliff rocks - multi-tonal layered materials
   const cliffMat = new MeshStandardMaterial({
     color: PALETTE.rockDark,
     roughness: 0.85,
@@ -118,7 +122,14 @@ export function createIslandDiorama(): Group {
     flatShading: true,
   });
 
-  const mainRockGeo = new CylinderGeometry(0.95, 0.6, 0.5, 9, 2);
+  const cliffUpperMat = new MeshStandardMaterial({
+    color: PALETTE.rockMid,
+    roughness: 0.8,
+    metalness: 0.12,
+    flatShading: true,
+  });
+
+  const mainRockGeo = new CylinderGeometry(0.98, 0.65, 0.52, 11, 2);
   const mainRock = new Mesh(mainRockGeo, cliffMat);
   mainRock.name = 'MainRock';
   mainRock.position.set(0, 0.2, 0);
@@ -126,9 +137,22 @@ export function createIslandDiorama(): Group {
   mainRock.receiveShadow = true;
   terrainGroup.add(mainRock);
 
+  // Winding stone path leading up from pier to lighthouse
+  const pathMat = new MeshStandardMaterial({
+    color: PALETTE.pathSand,
+    roughness: 0.9,
+    flatShading: true,
+  });
+  const pathGeo = new BoxGeometry(0.14, 0.02, 0.8);
+  const pathMesh = new Mesh(pathGeo, pathMat);
+  pathMesh.position.set(-0.25, 0.46, 0.25);
+  pathMesh.rotation.set(0.12, 0.6, 0);
+  pathMesh.receiveShadow = true;
+  terrainGroup.add(pathMesh);
+
   // Secondary elevated rock outcrop (Lighthouse Plateau)
-  const lighthousePlateauGeo = new CylinderGeometry(0.55, 0.7, 0.45, 8);
-  const lighthousePlateau = new Mesh(lighthousePlateauGeo, cliffMat);
+  const lighthousePlateauGeo = new CylinderGeometry(0.58, 0.72, 0.48, 9);
+  const lighthousePlateau = new Mesh(lighthousePlateauGeo, cliffUpperMat);
   lighthousePlateau.name = 'LighthousePlateau';
   lighthousePlateau.position.set(-0.2, 0.6, -0.15);
   lighthousePlateau.castShadow = true;
@@ -136,8 +160,8 @@ export function createIslandDiorama(): Group {
   terrainGroup.add(lighthousePlateau);
 
   // Terraced cliff outcrop for Life Socket
-  const gardenPlateauGeo = new CylinderGeometry(0.35, 0.45, 0.35, 7);
-  const gardenPlateau = new Mesh(gardenPlateauGeo, cliffMat);
+  const gardenPlateauGeo = new CylinderGeometry(0.38, 0.48, 0.38, 8);
+  const gardenPlateau = new Mesh(gardenPlateauGeo, cliffUpperMat);
   gardenPlateau.name = 'GardenPlateau';
   gardenPlateau.position.set(0.45, 0.4, 0.2);
   gardenPlateau.castShadow = true;
@@ -145,8 +169,8 @@ export function createIslandDiorama(): Group {
   terrainGroup.add(gardenPlateau);
 
   // Scenic Promontory Lookout for Hope Socket
-  const lookoutGeo = new CylinderGeometry(0.28, 0.38, 0.4, 6);
-  const lookoutPlateau = new Mesh(lookoutGeo, cliffMat);
+  const lookoutGeo = new CylinderGeometry(0.3, 0.4, 0.42, 7);
+  const lookoutPlateau = new Mesh(lookoutGeo, cliffUpperMat);
   lookoutPlateau.name = 'LookoutPlateau';
   lookoutPlateau.position.set(0.1, 0.5, -0.6);
   lookoutPlateau.castShadow = true;
@@ -190,96 +214,114 @@ export function createIslandDiorama(): Group {
   baseMesh.castShadow = true;
   lighthouseGroup.add(baseMesh);
 
-  // Tapered tower with classic red and white stripes
-  const towerHeight = 0.75;
+  // Tapered tower with classic red and white bands + arched window details
+  const towerHeight = 0.85;
   const towerBottom = new Mesh(
-    new CylinderGeometry(0.17, 0.22, towerHeight * 0.5, 16),
-    new MeshStandardMaterial({ color: PALETTE.lighthouseTower, roughness: 0.5 }),
+    new CylinderGeometry(0.18, 0.23, towerHeight * 0.45, 18),
+    new MeshStandardMaterial({ color: PALETTE.lighthouseTower, roughness: 0.45 }),
   );
-  towerBottom.position.y = 0.26;
+  towerBottom.position.y = 0.28;
   towerBottom.castShadow = true;
   lighthouseGroup.add(towerBottom);
 
-  const towerStripe = new Mesh(
-    new CylinderGeometry(0.14, 0.17, towerHeight * 0.3, 16),
-    new MeshStandardMaterial({ color: PALETTE.lighthouseRed, roughness: 0.5 }),
+  // Arched entrance door on tower
+  const doorMesh = new Mesh(
+    new BoxGeometry(0.08, 0.16, 0.05),
+    new MeshStandardMaterial({ color: PALETTE.woodWarm, roughness: 0.8 }),
   );
-  towerStripe.position.y = 0.52;
+  doorMesh.position.set(0, 0.2, 0.21);
+  lighthouseGroup.add(doorMesh);
+
+  const towerStripe = new Mesh(
+    new CylinderGeometry(0.15, 0.18, towerHeight * 0.35, 18),
+    new MeshStandardMaterial({ color: PALETTE.lighthouseRed, roughness: 0.45 }),
+  );
+  towerStripe.position.y = 0.58;
   towerStripe.castShadow = true;
   lighthouseGroup.add(towerStripe);
 
   const towerTop = new Mesh(
-    new CylinderGeometry(0.12, 0.14, towerHeight * 0.2, 16),
-    new MeshStandardMaterial({ color: PALETTE.lighthouseTower, roughness: 0.5 }),
+    new CylinderGeometry(0.13, 0.15, towerHeight * 0.2, 18),
+    new MeshStandardMaterial({ color: PALETTE.lighthouseTower, roughness: 0.45 }),
   );
-  towerTop.position.y = 0.7;
+  towerTop.position.y = 0.78;
   towerTop.castShadow = true;
   lighthouseGroup.add(towerTop);
 
-  // Lantern room balcony & railing
+  // Small square lookout windows
+  const windowMat = new MeshStandardMaterial({
+    color: 0x1e293b,
+    roughness: 0.2,
+    metalness: 0.7,
+  });
+  const win1 = new Mesh(new BoxGeometry(0.04, 0.06, 0.02), windowMat);
+  win1.position.set(0, 0.58, 0.17);
+  lighthouseGroup.add(win1);
+
+  // Lantern room balcony & metal railing
   const balcony = new Mesh(
-    new CylinderGeometry(0.18, 0.18, 0.04, 16),
-    new MeshStandardMaterial({ color: PALETTE.lighthouseRoof, roughness: 0.6 }),
+    new CylinderGeometry(0.2, 0.2, 0.04, 18),
+    new MeshStandardMaterial({ color: PALETTE.lighthouseRoof, roughness: 0.5 }),
   );
-  balcony.position.y = 0.79;
+  balcony.position.y = 0.88;
   balcony.castShadow = true;
   lighthouseGroup.add(balcony);
 
   // Lantern glass enclosure
   const lanternGlass = new Mesh(
-    new CylinderGeometry(0.13, 0.13, 0.14, 12),
+    new CylinderGeometry(0.14, 0.14, 0.16, 16),
     new MeshStandardMaterial({
       color: PALETTE.lanternGlass,
       transparent: true,
-      opacity: 0.6,
-      roughness: 0.1,
+      opacity: 0.65,
+      roughness: 0.05,
     }),
   );
-  lanternGlass.position.y = 0.88;
+  lanternGlass.position.y = 0.98;
   lighthouseGroup.add(lanternGlass);
 
   // Glowing Lantern Core
   const beaconCoreMat = new MeshStandardMaterial({
     color: PALETTE.lanternAmber,
     emissive: PALETTE.lanternAmber,
-    emissiveIntensity: 0.6,
-    roughness: 0.2,
+    emissiveIntensity: 0.9,
+    roughness: 0.15,
   });
-  const beaconCore = new Mesh(new SphereGeometry(0.06, 12, 12), beaconCoreMat);
+  const beaconCore = new Mesh(new SphereGeometry(0.07, 16, 16), beaconCoreMat);
   beaconCore.name = 'LighthouseBeaconCore';
-  beaconCore.position.y = 0.88;
+  beaconCore.position.y = 0.98;
   lighthouseGroup.add(beaconCore);
 
   // Lantern copper dome roof
   const domeRoof = new Mesh(
-    new ConeGeometry(0.16, 0.16, 16),
+    new ConeGeometry(0.18, 0.18, 18),
     new MeshStandardMaterial({ color: PALETTE.lighthouseRoof, roughness: 0.4 }),
   );
-  domeRoof.position.y = 1.03;
+  domeRoof.position.y = 1.15;
   domeRoof.castShadow = true;
   lighthouseGroup.add(domeRoof);
 
   // Weather vane spire
   const spire = new Mesh(
-    new CylinderGeometry(0.008, 0.015, 0.12, 8),
-    new MeshStandardMaterial({ color: 0x999999, metalness: 0.8, roughness: 0.2 }),
+    new CylinderGeometry(0.008, 0.015, 0.14, 8),
+    new MeshStandardMaterial({ color: 0xc4cbd4, metalness: 0.85, roughness: 0.2 }),
   );
-  spire.position.y = 1.15;
+  spire.position.y = 1.28;
   lighthouseGroup.add(spire);
 
-  // Rotating light beam (starts faint cone)
+  // Rotating light beam (layered cone + inner bright ray)
   const beamGroup = new Group();
   beamGroup.name = 'LighthouseBeamGroup';
   beamGroup.position.set(0, 0.88, 0);
 
-  const beamGeo = new ConeGeometry(0.4, 2.4, 16, 1, true);
-  beamGeo.translate(0, 1.2, 0);
+  const beamGeo = new ConeGeometry(0.35, 3.2, 24, 1, true);
+  beamGeo.translate(0, 1.6, 0);
   beamGeo.rotateX(Math.PI / 2); // Point beam forward along +Z
 
   const beamMat = new MeshBasicMaterial({
     color: PALETTE.lanternWarmGlow,
     transparent: true,
-    opacity: 0.18,
+    opacity: 0.22,
     side: DoubleSide,
     blending: AdditiveBlending,
     depthWrite: false,
@@ -287,6 +329,23 @@ export function createIslandDiorama(): Group {
   const beamMesh = new Mesh(beamGeo, beamMat);
   beamMesh.name = 'LighthouseBeamMesh';
   beamGroup.add(beamMesh);
+
+  // Inner intense core beam for cinematic volumetric feel
+  const innerBeamGeo = new ConeGeometry(0.12, 3.0, 16, 1, true);
+  innerBeamGeo.translate(0, 1.5, 0);
+  innerBeamGeo.rotateX(Math.PI / 2);
+  const innerBeamMat = new MeshBasicMaterial({
+    color: 0xffeedd,
+    transparent: true,
+    opacity: 0.35,
+    side: DoubleSide,
+    blending: AdditiveBlending,
+    depthWrite: false,
+  });
+  const innerBeam = new Mesh(innerBeamGeo, innerBeamMat);
+  innerBeam.name = 'InnerBeamMesh';
+  beamGroup.add(innerBeam);
+
   lighthouseGroup.add(beamGroup);
 
   root.add(lighthouseGroup);
@@ -346,23 +405,24 @@ export function createIslandDiorama(): Group {
 
   root.add(floraGroup);
 
-  // 5. Rain Particle System
-  const rainCount = 650;
+  // 5. Rain Particle System — Fine atmospheric streaks
+  const rainCount = 1400;
   const rainGeo = new BufferGeometry();
   const rainPos = new Float32Array(rainCount * 3);
   for (let i = 0; i < rainCount; i++) {
-    rainPos[i * 3] = (Math.random() - 0.5) * 4.0;
-    rainPos[i * 3 + 1] = Math.random() * 3.5 + 0.2;
-    rainPos[i * 3 + 2] = (Math.random() - 0.5) * 4.0;
+    rainPos[i * 3] = (Math.random() - 0.5) * 5.0;
+    rainPos[i * 3 + 1] = Math.random() * 4.0 + 0.1;
+    rainPos[i * 3 + 2] = (Math.random() - 0.5) * 5.0;
   }
   rainGeo.setAttribute('position', new BufferAttribute(rainPos, 3));
 
   const rainMat = new PointsMaterial({
     color: PALETTE.rain,
-    size: 0.035,
+    size: 0.012, // Fine mist/streaks instead of giant squares
     transparent: true,
-    opacity: 0.75,
+    opacity: 0.65,
     blending: AdditiveBlending,
+    depthWrite: false,
   });
   const rainPoints = new Points(rainGeo, rainMat);
   rainPoints.name = 'RainPoints';
@@ -444,63 +504,100 @@ export function createMemoryFragment(fragmentType: 'warmth' | 'life' | 'hope'): 
 
   let coreColor = PALETTE.warmthCore;
   let glowColor = PALETTE.warmthGlow;
+  let accentColor = 0xffe066;
 
   if (fragmentType === 'life') {
     coreColor = PALETTE.lifeCore;
     glowColor = PALETTE.lifeGlow;
+    accentColor = 0x6ee7b7;
   } else if (fragmentType === 'hope') {
     coreColor = PALETTE.hopeCore;
     glowColor = PALETTE.hopeGlow;
+    accentColor = 0x7dd3fc;
   }
 
-  // 1. Faceted Central Gem
+  // 1. Faceted Central Crystal
   let gemGeo: BufferGeometry;
   if (fragmentType === 'warmth') {
-    // Octahedral golden crystal
     gemGeo = new OctahedronGeometry(0.065, 0);
   } else if (fragmentType === 'life') {
-    // Emerald dodecahedron
-    gemGeo = new DodecahedronGeometry(0.06, 0);
+    gemGeo = new DodecahedronGeometry(0.062, 0);
   } else {
-    // Celestial star crystal
     gemGeo = new OctahedronGeometry(0.07, 1);
   }
 
   const gemMat = new MeshStandardMaterial({
     color: coreColor,
     emissive: glowColor,
-    emissiveIntensity: 0.7,
-    roughness: 0.15,
-    metalness: 0.3,
+    emissiveIntensity: 0.85,
+    roughness: 0.1,
+    metalness: 0.25,
     transparent: true,
-    opacity: 0.92,
+    opacity: 0.94,
   });
   const gemMesh = new Mesh(gemGeo, gemMat);
   gemMesh.name = 'FragmentGemMesh';
   gemMesh.castShadow = true;
   root.add(gemMesh);
 
-  // 2. Outer Rotating Halo Ring
+  // 2. Dual Nested Orbital Gyro-Rings
   const ringMat = new MeshBasicMaterial({
     color: glowColor,
     transparent: true,
-    opacity: 0.65,
+    opacity: 0.7,
     side: DoubleSide,
     blending: AdditiveBlending,
   });
-  const ringMesh = new Mesh(new TorusGeometry(0.095, 0.005, 8, 24), ringMat);
+
+  const ringMesh = new Mesh(new TorusGeometry(0.092, 0.004, 8, 32), ringMat);
   ringMesh.name = 'FragmentRingMesh';
   ringMesh.rotation.x = Math.PI / 4;
   root.add(ringMesh);
 
-  // 3. Inner pulsing core
+  const innerRingMesh = new Mesh(new TorusGeometry(0.076, 0.003, 8, 24), new MeshBasicMaterial({
+    color: accentColor,
+    transparent: true,
+    opacity: 0.55,
+    side: DoubleSide,
+    blending: AdditiveBlending,
+  }));
+  innerRingMesh.name = 'FragmentInnerRingMesh';
+  innerRingMesh.rotation.y = Math.PI / 3;
+  root.add(innerRingMesh);
+
+  // 3. Floating Sparkle / Ember motes around the gem
+  const sparkleGeo = new BufferGeometry();
+  const sparkleCount = 14;
+  const sparklePos = new Float32Array(sparkleCount * 3);
+  for (let i = 0; i < sparkleCount; i++) {
+    const theta = Math.random() * Math.PI * 2;
+    const phi = (Math.random() - 0.5) * Math.PI;
+    const dist = 0.08 + Math.random() * 0.035;
+    sparklePos[i * 3] = dist * Math.cos(phi) * Math.cos(theta);
+    sparklePos[i * 3 + 1] = dist * Math.sin(phi);
+    sparklePos[i * 3 + 2] = dist * Math.cos(phi) * Math.sin(theta);
+  }
+  sparkleGeo.setAttribute('position', new BufferAttribute(sparklePos, 3));
+  const sparkleMat = new PointsMaterial({
+    color: accentColor,
+    size: 0.012,
+    transparent: true,
+    opacity: 0.8,
+    blending: AdditiveBlending,
+    depthWrite: false,
+  });
+  const sparkles = new Points(sparkleGeo, sparkleMat);
+  sparkles.name = 'FragmentSparkles';
+  root.add(sparkles);
+
+  // 4. Brilliant Radiant Core
   const coreMat = new MeshBasicMaterial({
     color: 0xffffff,
     transparent: true,
-    opacity: 0.85,
+    opacity: 0.95,
     blending: AdditiveBlending,
   });
-  const coreMesh = new Mesh(new SphereGeometry(0.025, 8, 8), coreMat);
+  const coreMesh = new Mesh(new SphereGeometry(0.026, 10, 10), coreMat);
   coreMesh.name = 'FragmentInnerCore';
   root.add(coreMesh);
 
@@ -515,37 +612,60 @@ export function createMemoryAltarPlinth(): Group {
   root.name = 'MemoryAltarPlinth';
 
   const stoneMat = new MeshStandardMaterial({
-    color: 0x1f2430,
-    roughness: 0.8,
+    color: 0x2b3345,
+    roughness: 0.75,
     metalness: 0.2,
+    flatShading: true,
   });
 
-  // Elegant curved crescent plinth table
-  const table = new Mesh(new BoxGeometry(0.9, 0.08, 0.28), stoneMat);
-  table.name = 'AltarTableMesh';
-  table.position.y = 0.76;
-  table.castShadow = true;
-  table.receiveShadow = true;
-  root.add(table);
+  const goldTrimMat = new MeshStandardMaterial({
+    color: 0x94a3b8,
+    roughness: 0.3,
+    metalness: 0.8,
+  });
 
-  // Pedestal column
-  const column = new Mesh(new CylinderGeometry(0.12, 0.18, 0.72, 12), stoneMat);
+  // Sculpted pedestal column
+  const column = new Mesh(new CylinderGeometry(0.09, 0.14, 0.72, 10), stoneMat);
   column.position.y = 0.36;
   column.castShadow = true;
   column.receiveShadow = true;
   root.add(column);
 
-  // Three soft illuminated resting indentations for the fragments
-  const indentMat = new MeshBasicMaterial({
-    color: 0x334155,
-    transparent: true,
-    opacity: 0.5,
+  // Pedestal base ring
+  const baseRing = new Mesh(new CylinderGeometry(0.18, 0.22, 0.08, 12), stoneMat);
+  baseRing.position.y = 0.04;
+  baseRing.castShadow = true;
+  root.add(baseRing);
+
+  // Elegant curved crescent table plinth
+  const table = new Mesh(new BoxGeometry(0.72, 0.05, 0.22), stoneMat);
+  table.name = 'AltarTableMesh';
+  table.position.y = 0.74;
+  table.castShadow = true;
+  table.receiveShadow = true;
+  root.add(table);
+
+  // Polished metallic trim edge along front
+  const trim = new Mesh(new BoxGeometry(0.74, 0.015, 0.02), goldTrimMat);
+  trim.position.set(0, 0.74, 0.115);
+  root.add(trim);
+
+  // Three soft illuminated carved shrines for the fragments
+  const indentMat = new MeshStandardMaterial({
+    color: 0x1e2433,
+    roughness: 0.9,
   });
 
-  [-0.26, 0.0, 0.26].forEach((x, i) => {
-    const indent = new Mesh(new CylinderGeometry(0.07, 0.05, 0.015, 16), indentMat);
+  [-0.22, 0.0, 0.22].forEach((x, i) => {
+    // Carved stone socket base on altar
+    const shrineBase = new Mesh(new CylinderGeometry(0.065, 0.075, 0.03, 16), stoneMat);
+    shrineBase.position.set(x, 0.77, 0);
+    shrineBase.castShadow = true;
+    root.add(shrineBase);
+
+    const indent = new Mesh(new CylinderGeometry(0.045, 0.035, 0.015, 16), indentMat);
     indent.name = `RestingIndent_${i}`;
-    indent.position.set(x, 0.805, 0);
+    indent.position.set(x, 0.785, 0);
     root.add(indent);
   });
 

@@ -58,12 +58,12 @@ export class EchoCraftStorySystem extends createSystem({
   private beaconCoreMesh: Mesh | null = null;
 
   // Target values for smooth lerps
-  private targetDioramaScale = 0.38;
-  private currentDioramaScale = 0.38;
-  private targetDioramaY = 0.92;
-  private currentDioramaY = 0.92;
-  private targetDioramaZ = -1.55;
-  private currentDioramaZ = -1.55;
+  private targetDioramaScale = 0.55;
+  private currentDioramaScale = 0.55;
+  private targetDioramaY = 0.95;
+  private currentDioramaY = 0.95;
+  private targetDioramaZ = -1.35;
+  private currentDioramaZ = -1.35;
 
   private targetFloraScale = 0.001;
   private currentFloraScale = 0.001;
@@ -372,15 +372,16 @@ export class EchoCraftStorySystem extends createSystem({
       this.targetBeamIntensity = 1.0;
       this.beamRotationSpeed = 3.5;
 
-      // Expand Diorama into massive full-scale world surrounding the seated player
-      this.targetDioramaScale = 6.0;
-      this.targetDioramaY = -2.6;
-      this.targetDioramaZ = -1.2;
+      // Expand Diorama gracefully into cinematic world surrounding player without near-clipping
+      // Diorama grows slightly and shifts back so the island remains a beautifully framed monumental viewpoint
+      this.targetDioramaScale = 0.85;
+      this.targetDioramaY = 0.95;
+      this.targetDioramaZ = -1.65;
 
       // Shift ocean material to brilliant tropical sunrise turquoise
       if (this.oceanMesh && (this.oceanMesh.material as MeshStandardMaterial).color) {
-        (this.oceanMesh.material as MeshStandardMaterial).color.setHex(0x14746f);
-        (this.oceanMesh.material as MeshStandardMaterial).roughness = 0.15;
+        (this.oceanMesh.material as MeshStandardMaterial).color.setHex(0x0891b2);
+        (this.oceanMesh.material as MeshStandardMaterial).roughness = 0.12;
       }
 
       if (dioramaEntity) {
@@ -420,9 +421,9 @@ export class EchoCraftStorySystem extends createSystem({
       dioramaEntity.setValue(DioramaWorld, 'expansionProgress', 0);
     }
 
-    this.targetDioramaScale = 0.38;
-    this.targetDioramaY = 0.92;
-    this.targetDioramaZ = -1.55;
+    this.targetDioramaScale = 0.55;
+    this.targetDioramaY = 0.95;
+    this.targetDioramaZ = -1.35;
     this.targetFloraScale = 0.001;
     this.targetRainOpacity = 0.75;
     this.targetBeamIntensity = 0.18;
@@ -430,7 +431,7 @@ export class EchoCraftStorySystem extends createSystem({
 
     // Reset ocean to storm sea
     if (this.oceanMesh && (this.oceanMesh.material as MeshStandardMaterial).color) {
-      (this.oceanMesh.material as MeshStandardMaterial).color.setHex(0x111c2e);
+      (this.oceanMesh.material as MeshStandardMaterial).color.setHex(0x0f2238);
       (this.oceanMesh.material as MeshStandardMaterial).roughness = 0.2;
     }
 
