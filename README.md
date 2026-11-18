@@ -1,17 +1,17 @@
 # ECHOCRAFT VR — The Last Light
 > *Build a Memory. Step Inside Its Story.*
 
-[![Live Playable WebXR Demo](https://img.shields.io/badge/Playable%20Demo-Vercel%20Live-brightgreen?style=for-the-badge&logo=vercel)](https://echocraft-vr.vercel.app)
-[![Meta VR Start 2026](https://img.shields.io/badge/Meta%20VR%20Start-2026%20Entry-blue?style=for-the-badge&logo=meta)](https://echocraft-vr.vercel.app)
+[![Meta VR Start 2026](https://img.shields.io/badge/Meta%20VR%20Start-2026%20Entry-blue?style=for-the-badge&logo=meta)](#-experience-overview)
 [![Meta IWSDK](https://img.shields.io/badge/Meta%20IWSDK-v1.1.0-orange?style=for-the-badge)](https://iwsdk.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Live Demo Status](https://img.shields.io/badge/Live%20Demo-Deployment%20Pending-yellow?style=for-the-badge)](#-live-demo)
 
 ---
 
-## 🎮 PLAY LIVE
+## 🎮 LIVE DEMO
 
-### 🔗 **[https://echocraft-vr.vercel.app](https://echocraft-vr.vercel.app)**
-*Open directly in Meta Quest Browser for immersive WebXR mode, or in desktop Chrome / Edge / Brave with full mouse, ray-pointer, and hotkey fallback.*
+> **Live demo: deployment pending**  
+> *The experience is configured and ready for WebXR on Meta Quest Browser or desktop browser playback once deployed.*
 
 ---
 

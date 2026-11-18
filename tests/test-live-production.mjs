@@ -1,8 +1,8 @@
 import { chromium } from 'playwright';
 
 async function testLiveProduction() {
-  console.log('--- Testing Live Vercel Production Deployment ---');
-  const liveUrl = 'https://echocraft-vr.vercel.app/';
+  console.log('--- Testing Live Production Deployment ---');
+  const liveUrl = process.env.TEST_DEPLOY_URL || 'http://127.0.0.1:5173/';
   console.log(`Navigating to ${liveUrl}...`);
 
   const browser = await chromium.launch({
