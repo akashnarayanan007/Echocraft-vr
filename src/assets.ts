@@ -21,9 +21,18 @@ const uikitml = (fileName: string, name: string) => ({
   name,
 });
 
+const gltfModel = (fileName: string) => ({
+  url: publicAssetUrl(`assets/models/${fileName}`),
+  type: AssetType.GLTF,
+});
+
 export default defineAssets({
-  // The Island Diorama and Lighthouse
+  // The Island Diorama and Procedural Base
   'island-diorama': createIslandDiorama(),
+
+  // Blender-modeled stylized assets
+  'lighthouse-model': gltfModel('echocraft_lighthouse.glb'),
+  'island-model': gltfModel('echocraft_island.glb'),
 
   // Memory Sockets
   'socket-warmth': createMemorySocket('warmth'),

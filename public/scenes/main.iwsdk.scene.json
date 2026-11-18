@@ -84,6 +84,38 @@
       },
       "children": [
         {
+          "id": "island-model-node",
+          "name": "Island Terrain Mesh",
+          "framingRole": "content",
+          "content": {
+            "type": "asset",
+            "asset": "island-model",
+            "castShadow": true,
+            "receiveShadow": true
+          },
+          "transform": {
+            "position": [0, 0, 0],
+            "rotationDeg": [0, 0, 0],
+            "scale": 1.0
+          }
+        },
+        {
+          "id": "lighthouse-model-node",
+          "name": "Lighthouse Architecture Mesh",
+          "framingRole": "content",
+          "content": {
+            "type": "asset",
+            "asset": "lighthouse-model",
+            "castShadow": true,
+            "receiveShadow": true
+          },
+          "transform": {
+            "position": [-0.2, 0.825, -0.15],
+            "rotationDeg": [0, 15, 0],
+            "scale": 0.28
+          }
+        },
+        {
           "id": "socket-warmth-node",
           "name": "Socket Warmth",
           "framingRole": "content",

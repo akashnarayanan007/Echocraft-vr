@@ -76,30 +76,47 @@ export function createIslandDiorama(): Group {
   const root = new Group();
   root.name = 'IslandDioramaRoot';
 
-  // 1. Ocean Base Disc with layered rings
+  // 1. Organic Stylized Ocean Base
   const oceanGroup = new Group();
   oceanGroup.name = 'OceanGroup';
 
-  const oceanGeo = new CylinderGeometry(1.6, 1.4, 0.25, 48);
+  // Irregular faceted shoreline disc (not a hard circular bowl)
+  const oceanGeo = new CylinderGeometry(1.68, 1.48, 0.22, 32);
+  const posAttr = oceanGeo.attributes.position;
+  for (let i = 0; i < posAttr.count; i++) {
+    const x = posAttr.getX(i);
+    const z = posAttr.getZ(i);
+    const angle = Math.atan2(z, x);
+    const dist = Math.hypot(x, z);
+    if (dist > 0.5) {
+      // Natural organic wave disturbance along coast
+      const disp = 0.08 * Math.sin(angle * 4.0) + 0.04 * Math.cos(angle * 7.0);
+      posAttr.setX(i, x + disp * Math.cos(angle));
+      posAttr.setZ(i, z + disp * Math.sin(angle));
+    }
+  }
+  oceanGeo.computeVertexNormals();
+
   const oceanMat = new MeshStandardMaterial({
     color: PALETTE.seaDark,
-    roughness: 0.2,
-    metalness: 0.1,
+    roughness: 0.18,
+    metalness: 0.12,
     transparent: true,
-    opacity: 0.9,
+    opacity: 0.92,
+    flatShading: true,
   });
   const oceanMesh = new Mesh(oceanGeo, oceanMat);
   oceanMesh.name = 'OceanMesh';
-  oceanMesh.position.y = -0.125;
+  oceanMesh.position.y = -0.11;
   oceanMesh.receiveShadow = true;
   oceanGroup.add(oceanMesh);
 
-  // Sea foam edge ring
-  const foamGeo = new RingGeometry(1.35, 1.58, 48);
+  // Sea foam shoreline wave ring
+  const foamGeo = new RingGeometry(1.36, 1.66, 36);
   const foamMat = new MeshBasicMaterial({
     color: PALETTE.seaFoam,
     transparent: true,
-    opacity: 0.45,
+    opacity: 0.42,
     side: DoubleSide,
   });
   const foamMesh = new Mesh(foamGeo, foamMat);
@@ -110,218 +127,36 @@ export function createIslandDiorama(): Group {
 
   root.add(oceanGroup);
 
-  // 2. Rocky Crag Island Island Base
-  const terrainGroup = new Group();
-  terrainGroup.name = 'TerrainGroup';
-
-  // Lower craggy cliff rocks - multi-tonal layered materials
-  const cliffMat = new MeshStandardMaterial({
-    color: PALETTE.rockDark,
-    roughness: 0.85,
-    metalness: 0.15,
-    flatShading: true,
-  });
-
-  const cliffUpperMat = new MeshStandardMaterial({
-    color: PALETTE.rockMid,
-    roughness: 0.8,
-    metalness: 0.12,
-    flatShading: true,
-  });
-
-  const mainRockGeo = new CylinderGeometry(0.98, 0.65, 0.52, 11, 2);
-  const mainRock = new Mesh(mainRockGeo, cliffMat);
-  mainRock.name = 'MainRock';
-  mainRock.position.set(0, 0.2, 0);
-  mainRock.castShadow = true;
-  mainRock.receiveShadow = true;
-  terrainGroup.add(mainRock);
-
-  // Winding stone path leading up from pier to lighthouse
-  const pathMat = new MeshStandardMaterial({
-    color: PALETTE.pathSand,
-    roughness: 0.9,
-    flatShading: true,
-  });
-  const pathGeo = new BoxGeometry(0.14, 0.02, 0.8);
-  const pathMesh = new Mesh(pathGeo, pathMat);
-  pathMesh.position.set(-0.25, 0.46, 0.25);
-  pathMesh.rotation.set(0.12, 0.6, 0);
-  pathMesh.receiveShadow = true;
-  terrainGroup.add(pathMesh);
-
-  // Secondary elevated rock outcrop (Lighthouse Plateau)
-  const lighthousePlateauGeo = new CylinderGeometry(0.58, 0.72, 0.48, 9);
-  const lighthousePlateau = new Mesh(lighthousePlateauGeo, cliffUpperMat);
-  lighthousePlateau.name = 'LighthousePlateau';
-  lighthousePlateau.position.set(-0.2, 0.6, -0.15);
-  lighthousePlateau.castShadow = true;
-  lighthousePlateau.receiveShadow = true;
-  terrainGroup.add(lighthousePlateau);
-
-  // Terraced cliff outcrop for Life Socket
-  const gardenPlateauGeo = new CylinderGeometry(0.38, 0.48, 0.38, 8);
-  const gardenPlateau = new Mesh(gardenPlateauGeo, cliffUpperMat);
-  gardenPlateau.name = 'GardenPlateau';
-  gardenPlateau.position.set(0.45, 0.4, 0.2);
-  gardenPlateau.castShadow = true;
-  gardenPlateau.receiveShadow = true;
-  terrainGroup.add(gardenPlateau);
-
-  // Scenic Promontory Lookout for Hope Socket
-  const lookoutGeo = new CylinderGeometry(0.3, 0.4, 0.42, 7);
-  const lookoutPlateau = new Mesh(lookoutGeo, cliffUpperMat);
-  lookoutPlateau.name = 'LookoutPlateau';
-  lookoutPlateau.position.set(0.1, 0.5, -0.6);
-  lookoutPlateau.castShadow = true;
-  lookoutPlateau.receiveShadow = true;
-  terrainGroup.add(lookoutPlateau);
-
-  // Wooden jetty / pier extending into ocean
-  const pierMat = new MeshStandardMaterial({
-    color: PALETTE.woodWarm,
-    roughness: 0.9,
-  });
-  const pierMesh = new Mesh(new BoxGeometry(0.2, 0.04, 0.45), pierMat);
-  pierMesh.name = 'PierMesh';
-  pierMesh.position.set(-0.55, 0.08, 0.75);
-  pierMesh.rotation.y = 0.3;
-  pierMesh.castShadow = true;
-  terrainGroup.add(pierMesh);
-
-  // Small pier posts
-  for (let i = 0; i < 4; i++) {
-    const post = new Mesh(new CylinderGeometry(0.015, 0.015, 0.25, 6), pierMat);
-    const zOffset = (i % 2) * 0.35 - 0.175;
-    const xOffset = (Math.floor(i / 2) - 0.5) * 0.18;
-    post.position.set(pierMesh.position.x + xOffset, 0.05, pierMesh.position.z + zOffset);
-    terrainGroup.add(post);
-  }
-
-  root.add(terrainGroup);
-
-  // 3. Stylized Nautical Lighthouse
+  // 2. Beacon Volumetric Beam & Light Core
+  // Anchored at the lighthouse lantern room altitude (y ~ 1.62 in diorama space)
   const lighthouseGroup = new Group();
   lighthouseGroup.name = 'LighthouseGroup';
   lighthouseGroup.position.set(-0.2, 0.825, -0.15);
 
-  // Stone base pedestal
-  const baseMesh = new Mesh(
-    new CylinderGeometry(0.24, 0.28, 0.15, 12),
-    new MeshStandardMaterial({ color: PALETTE.lighthouseBase, roughness: 0.8 }),
-  );
-  baseMesh.name = 'LighthouseBase';
-  baseMesh.castShadow = true;
-  lighthouseGroup.add(baseMesh);
-
-  // Tapered tower with classic red and white bands + arched window details
-  const towerHeight = 0.85;
-  const towerBottom = new Mesh(
-    new CylinderGeometry(0.18, 0.23, towerHeight * 0.45, 18),
-    new MeshStandardMaterial({ color: PALETTE.lighthouseTower, roughness: 0.45 }),
-  );
-  towerBottom.position.y = 0.28;
-  towerBottom.castShadow = true;
-  lighthouseGroup.add(towerBottom);
-
-  // Arched entrance door on tower
-  const doorMesh = new Mesh(
-    new BoxGeometry(0.08, 0.16, 0.05),
-    new MeshStandardMaterial({ color: PALETTE.woodWarm, roughness: 0.8 }),
-  );
-  doorMesh.position.set(0, 0.2, 0.21);
-  lighthouseGroup.add(doorMesh);
-
-  const towerStripe = new Mesh(
-    new CylinderGeometry(0.15, 0.18, towerHeight * 0.35, 18),
-    new MeshStandardMaterial({ color: PALETTE.lighthouseRed, roughness: 0.45 }),
-  );
-  towerStripe.position.y = 0.58;
-  towerStripe.castShadow = true;
-  lighthouseGroup.add(towerStripe);
-
-  const towerTop = new Mesh(
-    new CylinderGeometry(0.13, 0.15, towerHeight * 0.2, 18),
-    new MeshStandardMaterial({ color: PALETTE.lighthouseTower, roughness: 0.45 }),
-  );
-  towerTop.position.y = 0.78;
-  towerTop.castShadow = true;
-  lighthouseGroup.add(towerTop);
-
-  // Small square lookout windows
-  const windowMat = new MeshStandardMaterial({
-    color: 0x1e293b,
-    roughness: 0.2,
-    metalness: 0.7,
-  });
-  const win1 = new Mesh(new BoxGeometry(0.04, 0.06, 0.02), windowMat);
-  win1.position.set(0, 0.58, 0.17);
-  lighthouseGroup.add(win1);
-
-  // Lantern room balcony & metal railing
-  const balcony = new Mesh(
-    new CylinderGeometry(0.2, 0.2, 0.04, 18),
-    new MeshStandardMaterial({ color: PALETTE.lighthouseRoof, roughness: 0.5 }),
-  );
-  balcony.position.y = 0.88;
-  balcony.castShadow = true;
-  lighthouseGroup.add(balcony);
-
-  // Lantern glass enclosure
-  const lanternGlass = new Mesh(
-    new CylinderGeometry(0.14, 0.14, 0.16, 16),
-    new MeshStandardMaterial({
-      color: PALETTE.lanternGlass,
-      transparent: true,
-      opacity: 0.65,
-      roughness: 0.05,
-    }),
-  );
-  lanternGlass.position.y = 0.98;
-  lighthouseGroup.add(lanternGlass);
-
-  // Glowing Lantern Core
   const beaconCoreMat = new MeshStandardMaterial({
     color: PALETTE.lanternAmber,
     emissive: PALETTE.lanternAmber,
-    emissiveIntensity: 0.9,
+    emissiveIntensity: 1.2,
     roughness: 0.15,
   });
   const beaconCore = new Mesh(new SphereGeometry(0.07, 16, 16), beaconCoreMat);
   beaconCore.name = 'LighthouseBeaconCore';
-  beaconCore.position.y = 0.98;
+  beaconCore.position.y = 0.80;
   lighthouseGroup.add(beaconCore);
 
-  // Lantern copper dome roof
-  const domeRoof = new Mesh(
-    new ConeGeometry(0.18, 0.18, 18),
-    new MeshStandardMaterial({ color: PALETTE.lighthouseRoof, roughness: 0.4 }),
-  );
-  domeRoof.position.y = 1.15;
-  domeRoof.castShadow = true;
-  lighthouseGroup.add(domeRoof);
-
-  // Weather vane spire
-  const spire = new Mesh(
-    new CylinderGeometry(0.008, 0.015, 0.14, 8),
-    new MeshStandardMaterial({ color: 0xc4cbd4, metalness: 0.85, roughness: 0.2 }),
-  );
-  spire.position.y = 1.28;
-  lighthouseGroup.add(spire);
-
-  // Rotating light beam (layered cone + inner bright ray)
+  // Rotating atmospheric light beam
   const beamGroup = new Group();
   beamGroup.name = 'LighthouseBeamGroup';
-  beamGroup.position.set(0, 0.88, 0);
+  beamGroup.position.set(0, 0.80, 0);
 
-  const beamGeo = new ConeGeometry(0.35, 3.2, 24, 1, true);
-  beamGeo.translate(0, 1.6, 0);
-  beamGeo.rotateX(Math.PI / 2); // Point beam forward along +Z
+  const beamGeo = new ConeGeometry(0.32, 3.4, 24, 1, true);
+  beamGeo.translate(0, 1.7, 0);
+  beamGeo.rotateX(Math.PI / 2);
 
   const beamMat = new MeshBasicMaterial({
     color: PALETTE.lanternWarmGlow,
     transparent: true,
-    opacity: 0.22,
+    opacity: 0.24,
     side: DoubleSide,
     blending: AdditiveBlending,
     depthWrite: false,
@@ -330,14 +165,13 @@ export function createIslandDiorama(): Group {
   beamMesh.name = 'LighthouseBeamMesh';
   beamGroup.add(beamMesh);
 
-  // Inner intense core beam for cinematic volumetric feel
-  const innerBeamGeo = new ConeGeometry(0.12, 3.0, 16, 1, true);
-  innerBeamGeo.translate(0, 1.5, 0);
+  const innerBeamGeo = new ConeGeometry(0.1, 3.2, 16, 1, true);
+  innerBeamGeo.translate(0, 1.6, 0);
   innerBeamGeo.rotateX(Math.PI / 2);
   const innerBeamMat = new MeshBasicMaterial({
     color: 0xffeedd,
     transparent: true,
-    opacity: 0.35,
+    opacity: 0.38,
     side: DoubleSide,
     blending: AdditiveBlending,
     depthWrite: false,
@@ -347,10 +181,9 @@ export function createIslandDiorama(): Group {
   beamGroup.add(innerBeam);
 
   lighthouseGroup.add(beamGroup);
-
   root.add(lighthouseGroup);
 
-  // 4. Dynamic Foliage & Flora Group (Expands as world heals)
+  // 3. Dynamic Foliage & Flora Group (Expands as world heals)
   const floraGroup = new Group();
   floraGroup.name = 'FloraGroup';
   floraGroup.scale.set(0.001, 0.001, 0.001); // starts invisible/dormant in storm
