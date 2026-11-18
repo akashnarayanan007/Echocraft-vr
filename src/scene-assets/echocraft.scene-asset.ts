@@ -183,6 +183,23 @@ export function createIslandDiorama(): Group {
   beamGroup.add(innerBeam);
 
   lighthouseGroup.add(beamGroup);
+
+  // 2b. Restoration Shockwave Ring (Expands outward from lighthouse/island on healing stages)
+  const pulseGeo = new RingGeometry(0.1, 0.25, 32);
+  const pulseMat = new MeshBasicMaterial({
+    color: 0xffe066,
+    transparent: true,
+    opacity: 0.0,
+    side: DoubleSide,
+    blending: AdditiveBlending,
+    depthWrite: false,
+  });
+  const pulseMesh = new Mesh(pulseGeo, pulseMat);
+  pulseMesh.name = 'RestorationPulseMesh';
+  pulseMesh.rotation.x = -Math.PI / 2;
+  pulseMesh.position.set(0, 0.1, 0);
+  lighthouseGroup.add(pulseMesh);
+
   root.add(lighthouseGroup);
 
   // 3. Dynamic Foliage & Flora Group (Expands as world heals)
@@ -405,12 +422,15 @@ export function createMemoryFragment(fragmentType: 'warmth' | 'life' | 'hope'): 
 
   // 3. Floating Sparkle / Ember motes around the gem
   const sparkleGeo = new BufferGeometry();
-  const sparkleCount = 14;
+  let sparkleCount = 16;
+  if (fragmentType === 'life') sparkleCount = 20; // lush nature motes
+  if (fragmentType === 'hope') sparkleCount = 24; // radiant azure stars
+
   const sparklePos = new Float32Array(sparkleCount * 3);
   for (let i = 0; i < sparkleCount; i++) {
     const theta = Math.random() * Math.PI * 2;
     const phi = (Math.random() - 0.5) * Math.PI;
-    const dist = 0.08 + Math.random() * 0.035;
+    const dist = 0.08 + Math.random() * 0.045;
     sparklePos[i * 3] = dist * Math.cos(phi) * Math.cos(theta);
     sparklePos[i * 3 + 1] = dist * Math.sin(phi);
     sparklePos[i * 3 + 2] = dist * Math.cos(phi) * Math.sin(theta);
@@ -418,9 +438,9 @@ export function createMemoryFragment(fragmentType: 'warmth' | 'life' | 'hope'): 
   sparkleGeo.setAttribute('position', new BufferAttribute(sparklePos, 3));
   const sparkleMat = new PointsMaterial({
     color: accentColor,
-    size: 0.012,
+    size: fragmentType === 'warmth' ? 0.014 : (fragmentType === 'life' ? 0.012 : 0.016),
     transparent: true,
-    opacity: 0.8,
+    opacity: 0.85,
     blending: AdditiveBlending,
     depthWrite: false,
   });

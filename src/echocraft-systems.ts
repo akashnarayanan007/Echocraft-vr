@@ -62,6 +62,12 @@ export class EchoCraftStorySystem extends createSystem({
   private lighthouseBeamGroup: Entity | null = null;
   private oceanMesh: Mesh | null = null;
   private beaconCoreMesh: Mesh | null = null;
+  private restorationPulseMesh: Mesh | null = null;
+
+  // Pulse wave animation state
+  private pulseActive = false;
+  private pulseProgress = 1.0;
+  private animTime = 0;
 
   // Target values for smooth lerps
   private targetDioramaScale = 0.55;
@@ -103,7 +109,7 @@ export class EchoCraftStorySystem extends createSystem({
     });
 
     // 3. Subscribe to grab / release lifecycle
-    const onGrab = (entity: Entity) => {
+    const onGrab = (_entity: Entity) => {
       SoundEngine.playChime('grab');
     };
 
@@ -129,15 +135,24 @@ export class EchoCraftStorySystem extends createSystem({
     // 5. Wire Spatial HUD Panel
     this.setupHUD();
 
-    // 6. Keyboard accessibility shortcuts
+    // 6. Keyboard accessibility shortcuts & user audio initiation
     const onKeyDown = (e: KeyboardEvent) => {
+      SoundEngine.startAmbience();
       if (e.key === '1') this.socketFragmentById('warmth');
       if (e.key === '2') this.socketFragmentById('life');
       if (e.key === '3') this.socketFragmentById('hope');
       if (e.key === 'r' || e.key === 'R') this.restartExperience();
+      if (e.key === 'm' || e.key === 'M') SoundEngine.toggleMute();
     };
     window.addEventListener('keydown', onKeyDown);
     this.cleanupFuncs.push(() => window.removeEventListener('keydown', onKeyDown));
+
+    // 7. Audio gesture listener for mouse/touch
+    const onUserGesture = () => {
+      SoundEngine.startAmbience();
+    };
+    window.addEventListener('pointerdown', onUserGesture, { once: true });
+    window.addEventListener('touchstart', onUserGesture, { once: true });
   }
 
   private setupHUD(): void {
@@ -304,7 +319,8 @@ export class EchoCraftStorySystem extends createSystem({
       }
     }
 
-    // If released outside socket: smoothly return to altar plinth
+    // If released outside socket: play feedback chime & smoothly return to altar plinth
+    SoundEngine.playChime('wrong');
     const initPos = this.initialPositions.get(fragId);
     if (initPos && fragEntity.object3D) {
       fragEntity.object3D.position.copy(initPos);
@@ -347,6 +363,24 @@ export class EchoCraftStorySystem extends createSystem({
         text: hopePlaced ? 'RESTORED' : 'WAITING',
         color: hopePlaced ? '#10b981' : '#64748b',
       });
+    }
+
+    // Update ambience audio layer to match progress
+    SoundEngine.setAmbienceStage(placedCount);
+
+    // Trigger visual restoration pulse shockwave
+    this.pulseActive = true;
+    this.pulseProgress = 0.0;
+    if (this.restorationPulseMesh) {
+      this.restorationPulseMesh.visible = true;
+      this.restorationPulseMesh.scale.set(0.1, 0.1, 0.1);
+      const pulseMat = this.restorationPulseMesh.material as MeshBasicMaterial;
+      if (pulseMat) {
+        pulseMat.opacity = 0.85;
+        if (placedCount === 1) pulseMat.color.setHex(0xf59e0b); // Warm amber
+        else if (placedCount === 2) pulseMat.color.setHex(0x10b981); // Emerald life
+        else if (placedCount === 3) pulseMat.color.setHex(0x38bdf8); // Azure dawn
+      }
     }
 
     // Apply Transformation Stages
@@ -559,6 +593,12 @@ export class EchoCraftStorySystem extends createSystem({
       this.epiloguePanel.setProperties({ display: 'none' });
     }
 
+    SoundEngine.setAmbienceStage(0);
+    this.pulseActive = false;
+    this.pulseProgress = 1.0;
+    if (this.restorationPulseMesh) {
+      this.restorationPulseMesh.visible = false;
+    }
     SoundEngine.playChime('reset');
   }
 
@@ -575,7 +615,6 @@ export class EchoCraftStorySystem extends createSystem({
       dioramaEntity.object3D.position.z = this.currentDioramaZ;
 
       // Also ensure sockets follow diorama scale and position
-      const dioramaObj = dioramaEntity.object3D;
       const isExpanded = dioramaEntity.getValue(DioramaWorld, 'isExpanded');
       if (isExpanded) {
         // Keep sockets hidden or scaled with diorama during full immersion
@@ -629,10 +668,49 @@ export class EchoCraftStorySystem extends createSystem({
       (this.lighthouseBeamGroup as unknown as Mesh).rotation.y += this.beamRotationSpeed * delta;
     }
 
-    // 5. Idle bobbing and halo rotation for unplaced fragments
+    // 5. Restoration Pulse Shockwave animation
+    if (!this.restorationPulseMesh && dioramaEntity?.object3D) {
+      const pulse = dioramaEntity.object3D.getObjectByName('RestorationPulseMesh');
+      if (pulse) {
+        this.restorationPulseMesh = pulse as Mesh;
+        this.restorationPulseMesh.visible = this.pulseActive;
+      }
+    }
+    if (this.pulseActive && this.restorationPulseMesh) {
+      this.pulseProgress += delta * 1.6; // ~0.62 second shockwave burst
+      if (this.pulseProgress >= 1.0) {
+        this.pulseActive = false;
+        this.restorationPulseMesh.visible = false;
+      } else {
+        const currentScale = 0.1 + this.pulseProgress * 3.8;
+        this.restorationPulseMesh.scale.set(currentScale, currentScale, currentScale);
+        const pulseMat = this.restorationPulseMesh.material as MeshBasicMaterial;
+        if (pulseMat) {
+          pulseMat.opacity = Math.max(0, 0.85 * (1.0 - this.pulseProgress));
+        }
+      }
+    }
+
+    // 6. Idle breathing & sparkle orbit for unplaced memory fragments
+    this.animTime += delta;
+    const pulseFactor = 1.0 + 0.08 * Math.sin(this.animTime * 3.2);
+
     this.queries.fragments.entities.forEach((f) => {
       const isSocketed = f.getValue(MemoryFragment, 'isSocketed');
       if (!isSocketed && f.object3D) {
+        // Subtle gem breathing pulse
+        const gem = f.object3D.getObjectByName('FragmentGemMesh');
+        if (gem) {
+          gem.scale.setScalar(pulseFactor);
+        }
+
+        // Rotate sparkles motes
+        const sparkles = f.object3D.getObjectByName('FragmentSparkles');
+        if (sparkles) {
+          sparkles.rotation.y += 1.4 * delta;
+          sparkles.rotation.x += 0.8 * delta;
+        }
+
         // Rotate outer halo ring
         const ring = f.object3D.getObjectByName('FragmentRingMesh');
         if (ring) {
