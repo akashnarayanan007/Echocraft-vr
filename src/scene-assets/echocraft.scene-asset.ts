@@ -80,17 +80,17 @@ export function createIslandDiorama(): Group {
   const oceanGroup = new Group();
   oceanGroup.name = 'OceanGroup';
 
-  // Irregular faceted shoreline disc (not a hard circular bowl)
-  const oceanGeo = new CylinderGeometry(1.68, 1.48, 0.22, 32);
+  // Finely segmented shoreline disc with smooth radial edge falloff
+  const oceanGeo = new CylinderGeometry(1.72, 1.42, 0.18, 64);
   const posAttr = oceanGeo.attributes.position;
   for (let i = 0; i < posAttr.count; i++) {
     const x = posAttr.getX(i);
     const z = posAttr.getZ(i);
     const angle = Math.atan2(z, x);
     const dist = Math.hypot(x, z);
-    if (dist > 0.5) {
-      // Natural organic wave disturbance along coast
-      const disp = 0.08 * Math.sin(angle * 4.0) + 0.04 * Math.cos(angle * 7.0);
+    if (dist > 0.4) {
+      // Natural organic wave disturbance along coastline
+      const disp = 0.06 * Math.sin(angle * 5.0) + 0.03 * Math.cos(angle * 9.0);
       posAttr.setX(i, x + disp * Math.cos(angle));
       posAttr.setZ(i, z + disp * Math.sin(angle));
     }
@@ -99,79 +99,81 @@ export function createIslandDiorama(): Group {
 
   const oceanMat = new MeshStandardMaterial({
     color: PALETTE.seaDark,
-    roughness: 0.18,
-    metalness: 0.12,
+    roughness: 0.22,
+    metalness: 0.08,
     transparent: true,
-    opacity: 0.92,
-    flatShading: true,
+    opacity: 0.88,
+    flatShading: false,
   });
   const oceanMesh = new Mesh(oceanGeo, oceanMat);
   oceanMesh.name = 'OceanMesh';
-  oceanMesh.position.y = -0.11;
+  oceanMesh.position.y = -0.09;
   oceanMesh.receiveShadow = true;
   oceanGroup.add(oceanMesh);
 
-  // Sea foam shoreline wave ring
-  const foamGeo = new RingGeometry(1.36, 1.66, 36);
+  // Sea foam shoreline wave ring with soft feathered edges
+  const foamGeo = new RingGeometry(1.32, 1.70, 64);
   const foamMat = new MeshBasicMaterial({
     color: PALETTE.seaFoam,
     transparent: true,
-    opacity: 0.42,
+    opacity: 0.32,
     side: DoubleSide,
+    depthWrite: false,
   });
   const foamMesh = new Mesh(foamGeo, foamMat);
   foamMesh.name = 'FoamRing';
   foamMesh.rotation.x = -Math.PI / 2;
-  foamMesh.position.y = 0.005;
+  foamMesh.position.y = 0.004;
   oceanGroup.add(foamMesh);
 
   root.add(oceanGroup);
 
-  // 2. Beacon Volumetric Beam & Light Core
-  // Anchored at the lighthouse lantern room altitude (y ~ 1.62 in diorama space)
+  // 2. Beacon Volumetric Light Core & Atmospheric Feathered Beam
   const lighthouseGroup = new Group();
   lighthouseGroup.name = 'LighthouseGroup';
   lighthouseGroup.position.set(-0.2, 0.825, -0.15);
 
   const beaconCoreMat = new MeshStandardMaterial({
-    color: PALETTE.lanternAmber,
-    emissive: PALETTE.lanternAmber,
+    color: 0xffaa33,
+    emissive: 0xff9911,
     emissiveIntensity: 1.2,
-    roughness: 0.15,
+    roughness: 0.2,
   });
-  const beaconCore = new Mesh(new SphereGeometry(0.07, 16, 16), beaconCoreMat);
+  const beaconCore = new Mesh(new SphereGeometry(0.04, 16, 16), beaconCoreMat);
   beaconCore.name = 'LighthouseBeaconCore';
   beaconCore.position.y = 0.80;
   lighthouseGroup.add(beaconCore);
 
-  // Rotating atmospheric light beam
+  // Soft atmospheric rotating light beam with feathered edges
   const beamGroup = new Group();
   beamGroup.name = 'LighthouseBeamGroup';
   beamGroup.position.set(0, 0.80, 0);
 
-  const beamGeo = new ConeGeometry(0.32, 3.4, 24, 1, true);
-  beamGeo.translate(0, 1.7, 0);
-  beamGeo.rotateX(Math.PI / 2);
+  // Outer feathered atmospheric glow cone
+  const outerBeamGeo = new ConeGeometry(0.18, 2.4, 32, 1, true);
+  outerBeamGeo.translate(0, 1.2, 0);
+  outerBeamGeo.rotateX(Math.PI / 2);
 
-  const beamMat = new MeshBasicMaterial({
-    color: PALETTE.lanternWarmGlow,
+  const outerBeamMat = new MeshBasicMaterial({
+    color: 0xffbb55,
     transparent: true,
-    opacity: 0.24,
+    opacity: 0.045, // Feathered, transparent atmospheric cone
     side: DoubleSide,
     blending: AdditiveBlending,
     depthWrite: false,
   });
-  const beamMesh = new Mesh(beamGeo, beamMat);
-  beamMesh.name = 'LighthouseBeamMesh';
-  beamGroup.add(beamMesh);
+  const outerBeam = new Mesh(outerBeamGeo, outerBeamMat);
+  outerBeam.name = 'LighthouseBeamMesh';
+  beamGroup.add(outerBeam);
 
-  const innerBeamGeo = new ConeGeometry(0.1, 3.2, 16, 1, true);
-  innerBeamGeo.translate(0, 1.6, 0);
+  // Inner soft golden core beam
+  const innerBeamGeo = new ConeGeometry(0.06, 2.2, 24, 1, true);
+  innerBeamGeo.translate(0, 1.1, 0);
   innerBeamGeo.rotateX(Math.PI / 2);
   const innerBeamMat = new MeshBasicMaterial({
-    color: 0xffeedd,
+    color: 0xffe6aa,
     transparent: true,
-    opacity: 0.38,
+    opacity: 0.08, // Restrained soft warm ray
     side: DoubleSide,
     blending: AdditiveBlending,
     depthWrite: false,
@@ -238,22 +240,25 @@ export function createIslandDiorama(): Group {
 
   root.add(floraGroup);
 
-  // 5. Rain Particle System — Fine atmospheric streaks
-  const rainCount = 1400;
+  // 5. Rain Particle System — Fine natural atmospheric streaks across entire scene
+  const rainCount = 1800;
   const rainGeo = new BufferGeometry();
   const rainPos = new Float32Array(rainCount * 3);
   for (let i = 0; i < rainCount; i++) {
-    rainPos[i * 3] = (Math.random() - 0.5) * 5.0;
-    rainPos[i * 3 + 1] = Math.random() * 4.0 + 0.1;
-    rainPos[i * 3 + 2] = (Math.random() - 0.5) * 5.0;
+    // Broad, continuous cylindrical distribution around the entire diorama & altar
+    const radius = Math.sqrt(Math.random()) * 3.8;
+    const theta = Math.random() * Math.PI * 2;
+    rainPos[i * 3] = radius * Math.cos(theta);
+    rainPos[i * 3 + 1] = Math.random() * 4.5 + 0.05;
+    rainPos[i * 3 + 2] = radius * Math.sin(theta);
   }
   rainGeo.setAttribute('position', new BufferAttribute(rainPos, 3));
 
   const rainMat = new PointsMaterial({
-    color: PALETTE.rain,
-    size: 0.012, // Fine mist/streaks instead of giant squares
+    color: 0xa5c4f8,
+    size: 0.0075, // Narrow delicate streaks
     transparent: true,
-    opacity: 0.65,
+    opacity: 0.55,
     blending: AdditiveBlending,
     depthWrite: false,
   });
@@ -445,60 +450,59 @@ export function createMemoryAltarPlinth(): Group {
   root.name = 'MemoryAltarPlinth';
 
   const stoneMat = new MeshStandardMaterial({
-    color: 0x2b3345,
-    roughness: 0.75,
-    metalness: 0.2,
+    color: 0x1f2738,
+    roughness: 0.8,
+    metalness: 0.15,
     flatShading: true,
   });
 
   const goldTrimMat = new MeshStandardMaterial({
-    color: 0x94a3b8,
+    color: 0x38bdf8,
     roughness: 0.3,
-    metalness: 0.8,
+    metalness: 0.7,
   });
 
-  // Sculpted pedestal column
-  const column = new Mesh(new CylinderGeometry(0.09, 0.14, 0.72, 10), stoneMat);
-  column.position.y = 0.36;
+  // Low-profile sculpted pedestal column (lowered from 0.72 to 0.42 to prevent viewport bisection)
+  const column = new Mesh(new CylinderGeometry(0.065, 0.11, 0.42, 10), stoneMat);
+  column.position.y = 0.21;
   column.castShadow = true;
   column.receiveShadow = true;
   root.add(column);
 
   // Pedestal base ring
-  const baseRing = new Mesh(new CylinderGeometry(0.18, 0.22, 0.08, 12), stoneMat);
-  baseRing.position.y = 0.04;
+  const baseRing = new Mesh(new CylinderGeometry(0.14, 0.18, 0.05, 12), stoneMat);
+  baseRing.position.y = 0.025;
   baseRing.castShadow = true;
   root.add(baseRing);
 
-  // Elegant curved crescent table plinth
-  const table = new Mesh(new BoxGeometry(0.72, 0.05, 0.22), stoneMat);
+  // Slim, elegant floating crescent plinth for fragments
+  const table = new Mesh(new BoxGeometry(0.68, 0.035, 0.18), stoneMat);
   table.name = 'AltarTableMesh';
-  table.position.y = 0.74;
+  table.position.y = 0.44;
   table.castShadow = true;
   table.receiveShadow = true;
   root.add(table);
 
-  // Polished metallic trim edge along front
-  const trim = new Mesh(new BoxGeometry(0.74, 0.015, 0.02), goldTrimMat);
-  trim.position.set(0, 0.74, 0.115);
+  // Subtle cyan edge trim along front
+  const trim = new Mesh(new BoxGeometry(0.70, 0.01, 0.015), goldTrimMat);
+  trim.position.set(0, 0.44, 0.095);
   root.add(trim);
 
   // Three soft illuminated carved shrines for the fragments
   const indentMat = new MeshStandardMaterial({
-    color: 0x1e2433,
+    color: 0x111827,
     roughness: 0.9,
   });
 
   [-0.22, 0.0, 0.22].forEach((x, i) => {
-    // Carved stone socket base on altar
-    const shrineBase = new Mesh(new CylinderGeometry(0.065, 0.075, 0.03, 16), stoneMat);
-    shrineBase.position.set(x, 0.77, 0);
+    const shrineBase = new Mesh(new CylinderGeometry(0.055, 0.065, 0.02, 16), stoneMat);
+    shrineBase.position.set(x, 0.465, 0);
     shrineBase.castShadow = true;
     root.add(shrineBase);
 
-    const indent = new Mesh(new CylinderGeometry(0.045, 0.035, 0.015, 16), indentMat);
+    const indent = new Mesh(new CylinderGeometry(0.04, 0.03, 0.01, 16), indentMat);
     indent.name = `RestingIndent_${i}`;
-    indent.position.set(x, 0.785, 0);
+    indent.position.set(x, 0.475, 0);
     root.add(indent);
   });
 

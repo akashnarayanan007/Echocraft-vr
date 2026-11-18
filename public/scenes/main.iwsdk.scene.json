@@ -31,13 +31,13 @@
       "id": "dir-light-storm",
       "name": "Storm Key Light",
       "transform": {
-        "position": [2.2, 3.8, 1.2],
-        "rotationDeg": [-50, 32, 0]
+        "position": [1.2, 3.2, 2.4],
+        "rotationDeg": [-42, 24, 0]
       },
       "components": {
         "com.iwsdk.components.DirectionalLight": {
-          "color": [0.75, 0.85, 1.0, 1],
-          "intensity": 2.2,
+          "color": [0.82, 0.88, 1.0, 1],
+          "intensity": 2.4,
           "castShadow": true,
           "shadowMapSize": "1024"
         }
@@ -51,8 +51,8 @@
       },
       "components": {
         "com.iwsdk.components.AmbientLight": {
-          "color": [0.45, 0.55, 0.72, 1],
-          "intensity": 0.85
+          "color": [0.55, 0.65, 0.82, 1],
+          "intensity": 1.2
         }
       }
     },
@@ -76,6 +76,10 @@
           "stage": 0,
           "expansionProgress": 0,
           "isExpanded": false
+        },
+        "com.iwsdk.components.DomeFade": {
+          "start": 1.25,
+          "end": 1.85
         },
         "LighthouseBeam": {
           "rotationSpeed": 1.2,
@@ -203,7 +207,7 @@
         "receiveShadow": true
       },
       "transform": {
-        "position": [0, -0.06, -0.55],
+        "position": [0, 0.18, -0.62],
         "rotationDeg": [0, 0, 0],
         "scale": 1.0
       }
@@ -219,7 +223,7 @@
         "receiveShadow": true
       },
       "transform": {
-        "position": [-0.22, 0.76, -0.55],
+        "position": [-0.22, 0.70, -0.62],
         "rotationDeg": [0, 0, 0],
         "scale": 1.0
       },
@@ -229,8 +233,8 @@
           "isSocketed": false,
           "socketId": "",
           "initialX": -0.22,
-          "initialY": 0.76,
-          "initialZ": -0.55
+          "initialY": 0.70,
+          "initialZ": -0.62
         },
         "RayInteractable": {},
         "OneHandGrabbable": {},
@@ -250,7 +254,7 @@
         "receiveShadow": true
       },
       "transform": {
-        "position": [0.0, 0.76, -0.55],
+        "position": [0.0, 0.70, -0.62],
         "rotationDeg": [0, 0, 0],
         "scale": 1.0
       },
@@ -260,8 +264,8 @@
           "isSocketed": false,
           "socketId": "",
           "initialX": 0.0,
-          "initialY": 0.76,
-          "initialZ": -0.55
+          "initialY": 0.70,
+          "initialZ": -0.62
         },
         "RayInteractable": {},
         "OneHandGrabbable": {},
@@ -281,7 +285,7 @@
         "receiveShadow": true
       },
       "transform": {
-        "position": [0.22, 0.76, -0.55],
+        "position": [0.22, 0.70, -0.62],
         "rotationDeg": [0, 0, 0],
         "scale": 1.0
       },
@@ -291,8 +295,8 @@
           "isSocketed": false,
           "socketId": "",
           "initialX": 0.22,
-          "initialY": 0.76,
-          "initialZ": -0.55
+          "initialY": 0.70,
+          "initialZ": -0.62
         },
         "RayInteractable": {},
         "OneHandGrabbable": {},
@@ -310,9 +314,9 @@
         "asset": "echocraft-hud"
       },
       "transform": {
-        "position": [-0.64, 1.15, -0.92],
-        "rotationDeg": [0, 24, 0],
-        "scale": 0.32
+        "position": [-1.22, 1.15, -1.25],
+        "rotationDeg": [0, 36, 0],
+        "scale": 0.28
       },
       "components": {
         "RayInteractable": {}

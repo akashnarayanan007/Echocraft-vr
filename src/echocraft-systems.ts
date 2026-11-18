@@ -5,9 +5,12 @@
 
 import {
   createSystem,
+  DirectionalLightComponent,
   DistanceGrabbable,
+  DomeGradient,
   Entity,
   Grabbed,
+  IBLGradient,
   Mesh,
   MeshBasicMaterial,
   MeshStandardMaterial,
@@ -36,6 +39,9 @@ export class EchoCraftStorySystem extends createSystem({
   sockets: { required: [MemorySocket] },
   dioramas: { required: [DioramaWorld] },
   beams: { required: [LighthouseBeam] },
+  skies: { required: [DomeGradient] },
+  ibls: { required: [IBLGradient] },
+  dirLights: { required: [DirectionalLightComponent] },
 }) {
   private tempVecA = new Vector3();
   private tempVecB = new Vector3();
@@ -380,9 +386,42 @@ export class EchoCraftStorySystem extends createSystem({
 
       // Shift ocean material to brilliant tropical sunrise turquoise
       if (this.oceanMesh && (this.oceanMesh.material as MeshStandardMaterial).color) {
-        (this.oceanMesh.material as MeshStandardMaterial).color.setHex(0x0891b2);
-        (this.oceanMesh.material as MeshStandardMaterial).roughness = 0.12;
+        (this.oceanMesh.material as MeshStandardMaterial).color.setHex(0x14b8a6);
+        (this.oceanMesh.material as MeshStandardMaterial).roughness = 0.15;
       }
+
+      // Transition Sky & IBL Environment to radiant golden sunrise
+      this.queries.skies.entities.forEach((skyEntity) => {
+        const skyCol = skyEntity.getVectorView(DomeGradient, 'sky');
+        const eqCol = skyEntity.getVectorView(DomeGradient, 'equator');
+        const groundCol = skyEntity.getVectorView(DomeGradient, 'ground');
+        if (skyCol && eqCol && groundCol) {
+          // Brilliant dawn sky: warm gold-peach sky, rose-coral horizon, warm turquoise ground
+          skyCol[0] = 0.95; skyCol[1] = 0.58; skyCol[2] = 0.38; skyCol[3] = 1.0;
+          eqCol[0] = 0.98; eqCol[1] = 0.78; eqCol[2] = 0.52; eqCol[3] = 1.0;
+          groundCol[0] = 0.12; groundCol[1] = 0.28; groundCol[2] = 0.36; groundCol[3] = 1.0;
+          skyEntity.setValue(DomeGradient, '_needsUpdate', true);
+        }
+      });
+
+      this.queries.ibls.entities.forEach((iblEntity) => {
+        const skyCol = iblEntity.getVectorView(IBLGradient, 'sky');
+        const eqCol = iblEntity.getVectorView(IBLGradient, 'equator');
+        if (skyCol && eqCol) {
+          skyCol[0] = 0.95; skyCol[1] = 0.70; skyCol[2] = 0.50; skyCol[3] = 1.0;
+          eqCol[0] = 0.98; eqCol[1] = 0.85; eqCol[2] = 0.65; eqCol[3] = 1.0;
+          iblEntity.setValue(IBLGradient, 'intensity', 1.35);
+          iblEntity.setValue(IBLGradient, '_needsUpdate', true);
+        }
+      });
+
+      this.queries.dirLights.entities.forEach((lightEntity) => {
+        const col = lightEntity.getVectorView(DirectionalLightComponent, 'color');
+        if (col) {
+          col[0] = 1.0; col[1] = 0.88; col[2] = 0.68; col[3] = 1.0;
+          lightEntity.setValue(DirectionalLightComponent, 'intensity', 3.2);
+        }
+      });
 
       if (dioramaEntity) {
         dioramaEntity.setValue(DioramaWorld, 'isExpanded', true);
@@ -434,6 +473,38 @@ export class EchoCraftStorySystem extends createSystem({
       (this.oceanMesh.material as MeshStandardMaterial).color.setHex(0x0f2238);
       (this.oceanMesh.material as MeshStandardMaterial).roughness = 0.2;
     }
+
+    // Reset Sky & Lighting to stormy atmosphere
+    this.queries.skies.entities.forEach((skyEntity) => {
+      const skyCol = skyEntity.getVectorView(DomeGradient, 'sky');
+      const eqCol = skyEntity.getVectorView(DomeGradient, 'equator');
+      const groundCol = skyEntity.getVectorView(DomeGradient, 'ground');
+      if (skyCol && eqCol && groundCol) {
+        skyCol[0] = 0.06; skyCol[1] = 0.12; skyCol[2] = 0.22; skyCol[3] = 1.0;
+        eqCol[0] = 0.12; eqCol[1] = 0.18; eqCol[2] = 0.28; eqCol[3] = 1.0;
+        groundCol[0] = 0.04; groundCol[1] = 0.06; groundCol[2] = 0.10; groundCol[3] = 1.0;
+        skyEntity.setValue(DomeGradient, '_needsUpdate', true);
+      }
+    });
+
+    this.queries.ibls.entities.forEach((iblEntity) => {
+      const skyCol = iblEntity.getVectorView(IBLGradient, 'sky');
+      const eqCol = iblEntity.getVectorView(IBLGradient, 'equator');
+      if (skyCol && eqCol) {
+        skyCol[0] = 0.22; skyCol[1] = 0.32; skyCol[2] = 0.48; skyCol[3] = 1.0;
+        eqCol[0] = 0.16; eqCol[1] = 0.24; eqCol[2] = 0.36; eqCol[3] = 1.0;
+        iblEntity.setValue(IBLGradient, 'intensity', 0.55);
+        iblEntity.setValue(IBLGradient, '_needsUpdate', true);
+      }
+    });
+
+    this.queries.dirLights.entities.forEach((lightEntity) => {
+      const col = lightEntity.getVectorView(DirectionalLightComponent, 'color');
+      if (col) {
+        col[0] = 0.82; col[1] = 0.88; col[2] = 1.0; col[3] = 1.0;
+        lightEntity.setValue(DirectionalLightComponent, 'intensity', 2.4);
+      }
+    });
 
     // Reset Sockets & their rune lights
     this.queries.sockets.entities.forEach((s) => {
