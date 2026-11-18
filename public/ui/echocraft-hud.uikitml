@@ -1,0 +1,190 @@
+<style>
+  .hud-root {
+    flex-direction: column;
+    width: 440px;
+  }
+
+  .hud-header {
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 18px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 12px;
+  }
+
+  .eyebrow {
+    color: #38bdf8;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+  }
+
+  .title {
+    color: #ffffff;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 32px;
+  }
+
+  .subtitle {
+    color: #94a3b8;
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  .status-container {
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 14px;
+  }
+
+  .fragment-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #0f172a;
+    border-radius: 8px;
+  }
+
+  .fragment-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #cbd5e1;
+  }
+
+  .fragment-badge {
+    font-size: 13px;
+    font-weight: 700;
+    color: #64748b;
+  }
+
+  .action-buttons {
+    flex-direction: row;
+    gap: 8px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 14px;
+  }
+
+  .mini-btn {
+    flex-grow: 1;
+    height: 38px;
+  }
+
+  .epilogue-box {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 14px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    padding-left: 16px;
+    padding-right: 16px;
+    background-color: #1e1b4b;
+    border-radius: 10px;
+    border-width: 1px;
+    border-color: #818cf8;
+  }
+
+  .epilogue-quote {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fde68a;
+    line-height: 22px;
+    text-align: center;
+  }
+
+  .epilogue-sub {
+    font-size: 13px;
+    color: #c7d2fe;
+    text-align: center;
+  }
+
+  .footer-row {
+    flex-direction: row;
+    gap: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 18px;
+  }
+
+  .bottom-btn {
+    flex-grow: 1;
+  }
+</style>
+
+<Panel class="hud-root">
+  <div class="hud-header">
+    <div class="eyebrow">ECHOCRAFT VR - ENTERTAINMENT</div>
+    <div class="title">The Last Light</div>
+    <div id="narrative-prompt" class="subtitle">
+      The storm batters the island. Place the three glowing memory fragments into their stone shrines to heal the world.
+    </div>
+  </div>
+
+  <div class="status-container">
+    <div class="fragment-row">
+      <div class="fragment-name">1. Memory of Warmth (Flame)</div>
+      <div id="badge-warmth" class="fragment-badge">WAITING</div>
+    </div>
+    <div class="fragment-row">
+      <div class="fragment-name">2. Memory of Life (Bloom)</div>
+      <div id="badge-life" class="fragment-badge">WAITING</div>
+    </div>
+    <div class="fragment-row">
+      <div class="fragment-name">3. Memory of Hope (Beacon)</div>
+      <div id="badge-hope" class="fragment-badge">WAITING</div>
+    </div>
+  </div>
+
+  <div class="action-buttons">
+    <Button id="btn-snap-warmth" class="mini-btn">
+      <ButtonLabel>Place Warmth</ButtonLabel>
+    </Button>
+    <Button id="btn-snap-life" class="mini-btn">
+      <ButtonLabel>Place Life</ButtonLabel>
+    </Button>
+    <Button id="btn-snap-hope" class="mini-btn">
+      <ButtonLabel>Place Hope</ButtonLabel>
+    </Button>
+  </div>
+
+  <div id="epilogue-panel" class="epilogue-box">
+    <div class="epilogue-quote">
+      "Even in the deepest storm, memories are the anchors that bring us home."
+    </div>
+    <div class="epilogue-sub">
+      Memory Restored | The Island Lives Again
+    </div>
+  </div>
+
+  <div class="footer-row">
+    <Button id="xr-button" class="bottom-btn">
+      <ButtonIcon>
+        <RectangleGoggles></RectangleGoggles>
+      </ButtonIcon>
+      <ButtonLabel>Enter XR</ButtonLabel>
+    </Button>
+    <Button id="exit-button" class="bottom-btn" style="display: none">
+      <ButtonIcon>
+        <LogIn></LogIn>
+      </ButtonIcon>
+      <ButtonLabel>Exit XR</ButtonLabel>
+    </Button>
+    <Button id="btn-restart" class="bottom-btn">
+      <ButtonIcon>
+        <RotateCcw></RotateCcw>
+      </ButtonIcon>
+      <ButtonLabel>Restart</ButtonLabel>
+    </Button>
+  </div>
+</Panel>

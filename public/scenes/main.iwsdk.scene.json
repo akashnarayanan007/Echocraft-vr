@@ -1,0 +1,308 @@
+{
+  "version": "iwsdk.scene.v1",
+  "units": "meters",
+  "components": {
+    "com.iwsdk.components.DomeGradient": {
+      "sky": [0.08, 0.11, 0.18, 1],
+      "equator": [0.12, 0.16, 0.25, 1],
+      "ground": [0.05, 0.07, 0.12, 1],
+      "elevationDeg": 18,
+      "azimuthDeg": -35,
+      "dither": true
+    },
+    "com.iwsdk.components.IBLGradient": {
+      "sky": [0.18, 0.22, 0.32, 1],
+      "equator": [0.15, 0.18, 0.26, 1],
+      "ground": [0.08, 0.1, 0.15, 1],
+      "intensity": 0.35
+    }
+  },
+  "environment": {
+    "toneMapping": "aces",
+    "exposure": 1.15,
+    "shadows": true,
+    "shadowMapType": "pcf"
+  },
+  "resources": {
+    "prefabs": []
+  },
+  "nodes": [
+    {
+      "id": "dir-light-storm",
+      "name": "Storm Key Light",
+      "transform": {
+        "position": [2.5, 4.0, 1.5],
+        "rotationDeg": [-55, 35, 0]
+      },
+      "components": {
+        "com.iwsdk.components.DirectionalLight": {
+          "color": [0.65, 0.75, 0.95, 1],
+          "intensity": 1.8,
+          "castShadow": true,
+          "shadowMapSize": "1024"
+        }
+      }
+    },
+    {
+      "id": "ambient-light",
+      "name": "Ambient Fill Light",
+      "transform": {
+        "position": [0, 2.0, 0]
+      },
+      "components": {
+        "com.iwsdk.components.AmbientLight": {
+          "color": [0.35, 0.42, 0.55, 1],
+          "intensity": 0.6
+        }
+      }
+    },
+    {
+      "id": "island-diorama-node",
+      "name": "The Last Light Diorama",
+      "framingRole": "content",
+      "content": {
+        "type": "asset",
+        "asset": "island-diorama",
+        "castShadow": true,
+        "receiveShadow": true
+      },
+      "transform": {
+        "position": [0, 0.92, -1.55],
+        "rotationDeg": [0, -15, 0],
+        "scale": 0.38
+      },
+      "components": {
+        "DioramaWorld": {
+          "stage": 0,
+          "expansionProgress": 0,
+          "isExpanded": false
+        },
+        "LighthouseBeam": {
+          "rotationSpeed": 1.2,
+          "intensity": 0.25
+        }
+      }
+    },
+    {
+      "id": "socket-warmth-node",
+      "name": "Socket Warmth",
+      "framingRole": "content",
+      "content": {
+        "type": "asset",
+        "asset": "socket-warmth",
+        "castShadow": true,
+        "receiveShadow": true
+      },
+      "transform": {
+        "position": [-0.08, 1.26, -1.62],
+        "rotationDeg": [0, 0, 0],
+        "scale": 0.38
+      },
+      "components": {
+        "MemorySocket": {
+          "socketId": "socket-warmth",
+          "acceptedFragmentId": "warmth",
+          "isOccupied": false,
+          "snapRadius": 0.32
+        },
+        "RayInteractable": {}
+      }
+    },
+    {
+      "id": "socket-life-node",
+      "name": "Socket Life",
+      "framingRole": "content",
+      "content": {
+        "type": "asset",
+        "asset": "socket-life",
+        "castShadow": true,
+        "receiveShadow": true
+      },
+      "transform": {
+        "position": [0.18, 1.10, -1.48],
+        "rotationDeg": [0, 0, 0],
+        "scale": 0.38
+      },
+      "components": {
+        "MemorySocket": {
+          "socketId": "socket-life",
+          "acceptedFragmentId": "life",
+          "isOccupied": false,
+          "snapRadius": 0.32
+        },
+        "RayInteractable": {}
+      }
+    },
+    {
+      "id": "socket-hope-node",
+      "name": "Socket Hope",
+      "framingRole": "content",
+      "content": {
+        "type": "asset",
+        "asset": "socket-hope",
+        "castShadow": true,
+        "receiveShadow": true
+      },
+      "transform": {
+        "position": [0.03, 1.14, -1.78],
+        "rotationDeg": [0, 0, 0],
+        "scale": 0.38
+      },
+      "components": {
+        "MemorySocket": {
+          "socketId": "socket-hope",
+          "acceptedFragmentId": "hope",
+          "isOccupied": false,
+          "snapRadius": 0.32
+        },
+        "RayInteractable": {}
+      }
+    },
+    {
+      "id": "altar-plinth-node",
+      "name": "Memory Altar Plinth",
+      "framingRole": "support",
+      "content": {
+        "type": "asset",
+        "asset": "altar-plinth",
+        "castShadow": true,
+        "receiveShadow": true
+      },
+      "transform": {
+        "position": [0, 0.05, -0.68],
+        "rotationDeg": [0, 0, 0],
+        "scale": 1.0
+      }
+    },
+    {
+      "id": "fragment-warmth-node",
+      "name": "Memory Fragment: Warmth",
+      "framingRole": "content",
+      "content": {
+        "type": "asset",
+        "asset": "fragment-warmth",
+        "castShadow": true,
+        "receiveShadow": true
+      },
+      "transform": {
+        "position": [-0.26, 0.88, -0.68],
+        "rotationDeg": [0, 0, 0],
+        "scale": 1.0
+      },
+      "components": {
+        "MemoryFragment": {
+          "fragmentId": "warmth",
+          "isSocketed": false,
+          "socketId": "",
+          "initialX": -0.26,
+          "initialY": 0.88,
+          "initialZ": -0.68
+        },
+        "RayInteractable": {},
+        "OneHandGrabbable": {},
+        "DistanceGrabbable": {
+          "movementMode": "MoveTowardsTarget"
+        }
+      }
+    },
+    {
+      "id": "fragment-life-node",
+      "name": "Memory Fragment: Life",
+      "framingRole": "content",
+      "content": {
+        "type": "asset",
+        "asset": "fragment-life",
+        "castShadow": true,
+        "receiveShadow": true
+      },
+      "transform": {
+        "position": [0.0, 0.88, -0.68],
+        "rotationDeg": [0, 0, 0],
+        "scale": 1.0
+      },
+      "components": {
+        "MemoryFragment": {
+          "fragmentId": "life",
+          "isSocketed": false,
+          "socketId": "",
+          "initialX": 0.0,
+          "initialY": 0.88,
+          "initialZ": -0.68
+        },
+        "RayInteractable": {},
+        "OneHandGrabbable": {},
+        "DistanceGrabbable": {
+          "movementMode": "MoveTowardsTarget"
+        }
+      }
+    },
+    {
+      "id": "fragment-hope-node",
+      "name": "Memory Fragment: Hope",
+      "framingRole": "content",
+      "content": {
+        "type": "asset",
+        "asset": "fragment-hope",
+        "castShadow": true,
+        "receiveShadow": true
+      },
+      "transform": {
+        "position": [0.26, 0.88, -0.68],
+        "rotationDeg": [0, 0, 0],
+        "scale": 1.0
+      },
+      "components": {
+        "MemoryFragment": {
+          "fragmentId": "hope",
+          "isSocketed": false,
+          "socketId": "",
+          "initialX": 0.26,
+          "initialY": 0.88,
+          "initialZ": -0.68
+        },
+        "RayInteractable": {},
+        "OneHandGrabbable": {},
+        "DistanceGrabbable": {
+          "movementMode": "MoveTowardsTarget"
+        }
+      }
+    },
+    {
+      "id": "hud-panel-node",
+      "name": "EchoCraft Spatial HUD",
+      "framingRole": "content",
+      "content": {
+        "type": "asset",
+        "asset": "echocraft-hud"
+      },
+      "transform": {
+        "position": [-0.82, 1.15, -0.92],
+        "rotationDeg": [0, 32, 0],
+        "scale": 1.0
+      },
+      "components": {
+        "RayInteractable": {}
+      }
+    }
+  ],
+  "authoring": {
+    "views": [
+      {
+        "id": "hero",
+        "role": "hero",
+        "projection": "perspective",
+        "position": [0, 1.25, 0.1],
+        "target": [0, 1.05, -1.35],
+        "fov": 68
+      },
+      {
+        "id": "seated-eye",
+        "role": "diagnostic",
+        "projection": "perspective",
+        "position": [0, 1.2, 0],
+        "target": [0, 1.0, -1.5],
+        "fov": 70
+      }
+    ]
+  }
+}
