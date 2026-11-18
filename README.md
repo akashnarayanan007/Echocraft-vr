@@ -1,112 +1,151 @@
 # ECHOCRAFT VR — The Last Light
 > *Build a Memory. Step Inside Its Story.*
 
-**Competition**: Meta VR Start Developer Competition 2026  
-**Track**: Entertainment | **Division**: New Experience  
-**SDK**: Meta Immersive Web SDK (IWSDK) v1.1.0, Three.js, TypeScript, Vite, WebXR  
+[![Live Playable WebXR Demo](https://img.shields.io/badge/Playable%20Demo-Vercel%20Live-brightgreen?style=for-the-badge&logo=vercel)](https://echocraft-vr.vercel.app)
+[![Meta VR Start 2026](https://img.shields.io/badge/Meta%20VR%20Start-2026%20Entry-blue?style=for-the-badge&logo=meta)](https://echocraft-vr.vercel.app)
+[![Meta IWSDK](https://img.shields.io/badge/Meta%20IWSDK-v1.1.0-orange?style=for-the-badge)](https://iwsdk.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 
 ---
 
-## Experience Overview
+## 🎮 PLAY LIVE
 
-**ECHOCRAFT VR** is a hands-first, seated-scale immersive storytelling experience built with Meta's official Immersive Web SDK (IWSDK).
-
-The player sits before a floating, storm-battered miniature island diorama known as **The Last Light**. A fierce indigo rainstorm shrouds the craggy cliffs, and the lighthouse lantern flickers weakly against the darkness. Within comfortable arm's reach rest three glowing memory fragments:
-
-1. **Memory of Warmth** (Golden Octahedron): Rekindles the lighthouse lantern, piercing the gloom with a sweeping volumetric beacon and reducing the tempest.
-2. **Memory of Life** (Emerald Crystal): Awakens dormant nature, causing vibrant moss, coastal grass, and blooming wildflowers to flourish across the terraces.
-3. **Memory of Hope** (Celestial Azure Star): Clears the skies into a radiant sunrise and triggers the **Immersive Transition** — the miniature island seamlessly expands into a full-scale world surrounding the seated player, concluding with a poetic epilogue.
+### 🔗 **[https://echocraft-vr.vercel.app](https://echocraft-vr.vercel.app)**
+*Open directly in Meta Quest Browser for immersive WebXR mode, or in desktop Chrome / Edge / Brave with full mouse, ray-pointer, and hotkey fallback.*
 
 ---
 
-## Features & Technical Highlights
+## 📖 Experience Overview
+
+**ECHOCRAFT VR — The Last Light** is a hands-first, seated-scale immersive VR storytelling experience created for the **Meta VR Start Developer Competition 2026 (Entertainment Track)** using Meta's official **Immersive Web SDK (IWSDK v1.1.0)**, Three.js, and WebXR.
+
+The player sits comfortably before a floating miniature island diorama known as **The Last Light**. A fierce indigo storm battering craggy cliffs shrouds the world in shadow, and the lighthouse beacon flickers faintly against the darkness. Within the player's natural reach envelope rest three glowing memory fragments:
+
+1. 🔥 **Memory of Warmth** *(Golden Octahedron)*: Rekindles the lighthouse lantern, piercing the tempest with a sweeping 360° volumetric beam and calming the rain into mist.
+2. 🌿 **Memory of Life** *(Emerald Crystal)*: Awakens coastal flora, shifting ocean color from stormy teal to tranquil sapphire and calming turbulent waves.
+3. ⭐ **Memory of Hope** *(Celestial Azure Star)*: Dissolves the storm into a radiant golden sunrise and triggers the **Immersive Transition** — the miniature island seamlessly expands into a full-scale world surrounding the seated viewer, accompanied by a poetic epilogue.
+
+---
+
+## 🛠️ Key Technical Architecture
 
 - **100% Native Meta IWSDK Architecture**:
-  - Entity-Component-System (ECS) query architecture via `@iwsdk/core`.
-  - Zero invented APIs; uses standard declarative `iwsdk.config.json` and `main.iwsdk.scene.json`.
-  - Native spatial UI powered by `@pmndrs/uikit-horizon` and `@pmndrs/uikit-lucide`.
-- **Seated-First Ergonomics**:
-  - Designed for stationary comfort without requiring roomscale walking.
-  - All fragments and sockets are positioned comfortably within the natural seated reach envelope.
+  - Full Entity-Component-System (ECS) query architecture using `@iwsdk/core`.
+  - Zero invented APIs; driven by declarative project authority `iwsdk.config.json` and `public/scenes/main.iwsdk.scene.json`.
+  - Spatial UI crafted with `@pmndrs/uikit-horizon` and `@pmndrs/uikit-lucide`.
+- **Custom Blender 4.3 Low-Poly GLB Assets**:
+  - Bespoke stylized lighthouse tower with spiral catwalk, lantern housing, and weather vane (`echocraft_lighthouse.glb`).
+  - Terraced craggy sea cliff base with stone foundation stairs and memory shrines (`echocraft_island.glb`).
 - **Hands-First WebXR & Multi-Modal Input**:
-  - Near hand pinch & squeeze grabbing (`OneHandGrabbable`).
-  - Distant ray targeting & trigger grabbing (`DistanceGrabbable`).
-  - Full desktop mouse, ray pointer, and keyboard testing support (`RayInteractable`).
-- **Smooth, Comfort-Safe Expansion**:
-  - The diorama smoothly scales and repositions around the seated viewer, preserving vestibular comfort with zero forced camera translation.
-- **Zero-Dependency Procedural Synthesizer**:
-  - Real-time Web Audio API procedural sound engine generating resonant chord chimes for each fragment placement, rain ambience, and triumphant sunrise harmonics — 100% offline with no external audio file downloads.
+  - Near-hand pinch and squeeze grabbing (`OneHandGrabbable`).
+  - Distant controller ray targeting and trigger pull (`DistanceGrabbable`).
+  - Full desktop mouse click-and-drag, direct-click conduit snaps, spatial HUD buttons, and keyboard controls (`RayInteractable`).
+- **Seated Ergonomics & Comfort-First Expansion**:
+  - Zero forced camera locomotion or artificial head movement.
+  - Smooth diorama-to-world scaling transition centered around the viewer's seated position.
+- **Zero-Dependency Procedural Audio Synthesizer**:
+  - Real-time Web Audio API sound engine generating polyphonic resonant chords on memory placement, continuous dynamic rain ambience, and triumphant sunrise harmonics — 100% offline with zero external audio downloads.
 
 ---
 
-## Instructions for Judges & Developers
+## 🕹️ Controls
+
+### WebXR (Meta Quest 2, 3, 3S, Pro)
+- **Grab Fragments**: Squeeze controller grip button or pinch fingers in direct hand tracking.
+- **Ray Interaction**: Point target ray at fragments or spatial HUD buttons and pull the trigger.
+- **Seated Reset**: Press the reset button on the floating HUD or trigger the reset hotkey to relive the experience.
+
+### Desktop Browser (Chrome / Edge / Safari / Brave)
+- **Click & Drag**: Pick up and freely drag memory fragments toward their pedestals.
+- **Direct Click**: Click any unsocketed fragment to smoothly glide it into its matching socket.
+- **HUD Buttons**: Click `Place Warmth`, `Place Life`, and `Place Hope` on the floating diorama panel.
+- **Keyboard Shortcuts**:
+  - `1`: Socket Memory of Warmth
+  - `2`: Socket Memory of Life
+  - `3`: Socket Memory of Hope
+  - `R`: Reset Experience to the initial storm
+
+---
+
+## 💻 Developer Quick Start
 
 ### Prerequisites
-- **Node.js**: `>= 20.19.0` (Verified on Node v24.21.0)
-- **Modern Web Browser**: Chrome, Edge, or Meta Quest Browser with WebXR enabled
+- **Node.js**: `>= 20.19.0` (Verified on Node v22 & v24)
+- **Package Manager**: `npm`
 
-### Quick Start (Local Development)
+### Local Setup
 
 ```bash
-# 1. Install dependencies
+# Clone the repository
+git clone https://github.com/akashnarayanan007/echocraft-vr.git
+cd echocraft-vr
+
+# Install dependencies
 npm install
 
-# 2. Start the IWSDK dev server with IWER XR Emulation
+# Start IWSDK development server with IWER XR Emulation
 npm run dev
 
-# Or start headless AI-mode server:
-npx @iwsdk/cli dev up --ai-mode agent --headless
+# Or run Vite runtime directly
+npm run dev:runtime
 ```
 
-The application will launch at `https://localhost:8081/`.
+Open `https://localhost:8081/` in your browser and accept the local self-signed development certificate.
 
-### Desktop XR Emulation & Testing
-If you do not have a physical Meta Quest headset connected, you can experience and test the full experience using IWSDK's built-in **IWER Desktop XR Emulator**:
-
-1. Open `https://localhost:8081/` in your desktop Chrome/Edge browser.
-2. Accept the local development certificate.
-3. On desktop, you can interact immediately using:
-   - **Click & Drag**: Pick up and move memory fragments.
-   - **Direct Click**: Click any unsocketed fragment to smoothly conduit-snap it into its matching socket.
-   - **HUD One-Click Buttons**: Click `Place Warmth`, `Place Life`, and `Place Hope` on the spatial panel.
-   - **Keyboard Shortcuts**:
-     - Press `1`: Place Memory of Warmth
-     - Press `2`: Place Memory of Life
-     - Press `3`: Place Memory of Hope
-     - Press `R`: Reset / Relive Experience
-4. Click **Enter XR** to activate IWER emulation mode:
-   - Use `W/A/S/D` to navigate the emulator viewpoint.
-   - Hold `Right Mouse Button` to look around.
-   - Use `Shift` / `Space` to move controllers.
-   - Click to squeeze / pinch / ray-select.
-
-### Production Build & Type Checking
+### Quality Assurance & Validation Suite
 
 ```bash
-# Run TypeScript validation
+# Typecheck TypeScript codebase
 npm run typecheck
 
-# Build optimized production bundle
+# Lint source files
+npm run lint
+
+# Production build verification
 npm run build
 
-# Preview production build locally
-npm run preview
+# Automated Playwright WebGL smoke test
+npm run test:smoke
+
+# Automated end-to-end visual quality gate audit
+node tests/visual-audit.mjs
 ```
 
 ---
 
-## Development & Testing Methodology
+## 🔬 Development & Testing Disclosure
 
-In strict accordance with the competition constraints, **ECHOCRAFT VR** was developed, iterated, and verified entirely through desktop WebXR emulation (IWER) and the official IWSDK CLI tools. No physical Quest headset was required or falsely claimed.
-
-- **Verified CLI Status**: `npx @iwsdk/cli dev status`
-- **Verified Type Safety**: `npm run typecheck` passes with zero errors.
-- **Verified Production Bundling**: `npm run build` generates clean minified assets with tree-shaken UI and MSDF typography.
-- **Verified Offline Operation**: All 3D assets and audio soundscapes are generated procedurally with zero external cloud dependencies.
+In strict adherence to competition guidelines and developer transparency:
+- **Development & Verification**: Developed, iterated, and tested via the official **Meta IWSDK CLI**, **Three.js rendering engine**, and the **IWER Desktop XR Emulator**.
+- **Hardware Disclosure**: No physical Quest hardware testing is claimed. All interactions, spatial layouts, controller poses, hand-pinch gestures, and rendering performance were verified through the IWSDK browser testing suite and Playwright automated visual quality audits.
 
 ---
 
-## License & Credits
+## 📁 Repository Structure
 
-See [ASSET_CREDITS.md](file:///c:/Users/akash/Desktop/ECHOCRAFT-VR/ASSET_CREDITS.md) for full licensing details.
-All custom code and procedural assets are licensed under the MIT License.
+```
+├── docs/                        # Architecture, QA audits, and release documentation
+│   ├── FINAL_QA_REPORT.md       # Master Production 04 verification results
+│   ├── WALKTHROUGH_AUDIO_REPAIR_REPORT.md # Audio engineering and EBU R128 loudness analysis
+│   └── PRODUCTION_05_RELEASE_REPORT.md    # Release candidate validation
+├── public/
+│   ├── assets/models/           # Blender 4.3 custom GLB models (lighthouse, island)
+│   ├── scenes/                  # Declarative IWSDK scene JSON manifests
+│   └── ui/                      # Spatial UIKitML UI panels
+├── src/
+│   ├── scene-assets/            # Procedural 3D scene asset definitions
+│   ├── echocraft-systems.ts     # Core ECS systems (Lighting, Weather, Transitions, Audio)
+│   ├── echocraft-audio.ts       # Procedural Web Audio API soundscape synthesizer
+│   ├── assets.ts                # Shared runtime & editor asset catalog
+│   ├── components.ts            # ECS component declarations
+│   └── index.ts                 # World instantiation & system registration
+└── tests/                       # Automated Playwright smoke tests & visual audit suite
+```
+
+---
+
+## 📄 License & Credits
+
+- Source code licensed under the [MIT License](LICENSE).
+- All custom 3D models and procedural shaders created specifically for ECHOCRAFT VR.
+- For third-party library licenses, see [ASSET_CREDITS.md](file:///c:/Users/akash/Desktop/ECHOCRAFT-VR/ASSET_CREDITS.md).
